@@ -1,84 +1,108 @@
 Nome do Projeto: MealFlow
-Documento: DRF-2026-001 Versão: 1.0 Status: Especificação Inicial Autor: Analista de Requisitos (IA)
+Documento: DRF-2026-001 Versão: 1.3 (Detalhamento Técnico) Status: Especificação Final Autor: Analista de Requisitos (IA)
 
-1. Contexto
-Problema: Erros e lentidão em processos manuais (papel) em estabelecimentos alimentícios, gerando falhas de comunicação entre garçom e cozinha e perda de dados de vendas.
+1. Contexto e Perfis
+O MealFlow é uma plataforma multitenant (vários estabelecimentos) focada na eficiência operacional.
 
-Usuários: * Administrador: Gerencia cardápio, usuários, atribui funções e acessa relatórios.
+Perfis de Acesso:
+Visitante: Usuário logado mas sem restaurante ou sem função atribuída.
 
-Garçom: Registra pedidos, gerencia quantidades e entrega produtos.
+Dono (Admin): Poder total sobre o cardápio, equipe e finanças da sua unidade.
 
-Cozinha: Visualiza fila de pedidos e atualiza o status de preparo.
+Garçom: Responsável pela abertura, acompanhamento e entrega de pedidos.
 
-Padrão: Usuário recém-cadastrado sem permissões de acesso.
-
-Valor: Digitalização acessível para pequenos estabelecimentos, garantindo organização, rastreabilidade via ID único e controle financeiro básico.
+Cozinha: Foco exclusivo na fila de produção e controle de estoque (indisponibilidade).
 
 2. Requisitos Funcionais (RF)
-RF01 - Gestão de Perfis e Acesso
-Descrição: O sistema deve permitir o cadastro de funcionários e a atribuição de funções pelo administrador. Regras:
+RF01 - Onboarding e Validação de Unidade
+Descrição: Fluxo inicial de entrada no sistema.
 
-O acesso às abas (Garçom, Cozinha, Admin) é bloqueado até que o Administrador atribua uma função.
+Funcionalidades:
 
-Cada funcionário possui login e senha individuais. Critério de Aceite:
+Seleção de Papel: O usuário escolhe entre "Cadastrar meu Restaurante" ou "Vincular-me a um Restaurante".
 
-[ ] Validar bloqueio de abas para perfil "Padrão".
+Cadastro do Negócio: O dono informa Nome Fantasia, Telefone e Endereço. O campo CNPJ/MEI é opcional.
 
-[ ] Validar login individual por CPF ou E-mail.
+Upload de Documentação: Campo para upload de foto de ID (RG/CNH) e foto do estabelecimento/cardápio para moderação.
 
-RF02 - Gerenciamento de Cardápio
-Descrição: O Administrador deve cadastrar itens oferecidos pelo estabelecimento. Regras:
+Status de Aprovação: Enquanto a equipe MealFlow não aprovar, o usuário visualiza apenas uma tela de "Aguardando Moderação".
 
-Atributos: Nome, Preço (obrigatórios); Descrição/Ingredientes e Foto (opcionais).
+RF02 - Gestão de Equipe (Painel Admin)
+Descrição: O Admin gerencia quem trabalha no seu restaurante.
 
-Organização: Os itens devem ser agrupados por categorias (Bebidas, Pratos, Porções, etc.).
+Funcionalidades:
 
-Controle: Possibilidade de marcar itens como "Indisponível" sem excluí-los. Critério de Aceite:
+Aprovação de Membros: Lista de usuários que solicitaram vínculo ao restaurante.
 
-[ ] Itens marcados como indisponíveis não devem aparecer para o garçom.
+Atribuição de Cargos: Menu dropdown para definir se o usuário aprovado será "Garçom", "Cozinha" ou "Admin".
 
-RF03 - Registro de Pedidos
+Revogação: Opção de desativar o acesso de um funcionário.
 
-Descrição: O garçom deve registrar os pedidos através de uma interface de seleção. Regras:
+RF03 - Gestão de Cardápio e Seções
+Descrição: Cadastro de produtos organizados por categorias.
 
-Seleção via checkbox com campo de "quantidade" (padrão 1).
+Funcionalidades:
 
-Campo de "observação individual" para cada item selecionado.
+Categorização: Criação de seções (ex: "Entradas", "Bebidas", "Sobremesas").
 
-Geração automática de ID único para cada pedido.
+CRUD de Itens: Cadastro de Nome, Preço (formato decimal), Descrição/Ingredientes (opcional) e Foto (opcional).
 
-A cozinha visualiza pedidos "Em Preparo".
-Somente a cozinha pode gerar o cancelamento de pedidos em fase de preparo após aviso do garçom. Critério de Aceite:
+Chave de Disponibilidade: Um botão toggle (ligar/desligar) para cada item. Se desligado, o item desaparece da lista de pedidos do garçom, mas permanece no banco de dados.
 
-[ ] Validar disparo da notificação push/pop-up no perfil do garçom.
+RF04 - Lançamento de Pedidos (Interface do Garçom)
+Descrição: Processo de anotação digital do pedido.
 
-RF05 - Levantamento e Exportação de Dados
-Descrição: O administrador deve acessar métricas e exportar o histórico. Regras:
+Funcionalidades:
 
-Exibir valor total arrecadado (dia/mês) e itens mais vendidos por período.
+Identificação: Campos para ID da Mesa, Nome do Cliente e Telefone (opcionais).
 
-Permitir download do histórico em formato offline (ex: CSV ou PDF). Critério de Aceite:
+Seleção: Lista de itens com checkbox. Ao marcar, libera o campo "Quantidade" e um campo de texto "Observação do Item" (ex: "Sem gelo", "Bem passado").
 
-[ ] Verificar se o download contém os dados filtrados em tela.
+Revisão: Antes de enviar, o sistema mostra o resumo dos itens selecionados.
+
+RF05 - Painel de Produção (Interface da Cozinha)
+Descrição: Visualização e controle do que deve ser preparado.
+
+Funcionalidades:
+
+Fila de Pedidos: Cards contendo o ID do pedido, Horário do lançamento e os itens com suas respectivas observações.
+
+Atualização de Status: Botão "Iniciar Preparo" e Botão "Marcar como Pronto".
+
+Cancelamento: Botão para cancelar o pedido (apenas se estiver em preparo), exigindo uma breve justificativa.
+
+RF06 - Central de Notificações
+Descrição: Alerta para o garçom sobre pratos finalizados.
+
+Funcionalidades:
+
+Notificação Push/Pop-up: Quando a cozinha clica em "Pronto", o dispositivo do garçom emite um alerta visual e sonoro/vibratório.
+
+Lista de Prontos: Uma aba onde o garçom vê todos os IDs de pedidos que aguardam retirada.
+
+RF07 - Fechamento e Levantamento de Dados
+Descrição: Finalização financeira e estatística.
+
+Funcionalidades:
+
+Status de Pagamento: Ao entregar o pedido, o usuário seleciona se foi "Pago" ou "Não Pago" (pendente/fiado).
+
+Dashboard Admin: Gráficos simples ou cards com: Total vendido no dia, Média mensal e Ranking dos 5 itens mais pedidos.
+
+Exportação: Botão para gerar arquivo (CSV/PDF) com o histórico de pedidos do período selecionado.
 
 3. Regras de Negócio (RN)
-RN01 (Cancelamento): Pedidos já marcados como "Pronto" ou "Entregue" não podem ser cancelados no sistema para fins de auditoria.
+RN01: O ID do pedido deve ser único e gerado apenas após a confirmação do garçom.
 
-RN02 (Descarte): Itens com erro de produção que já saíram da cozinha devem ser registrados como perda, mas o novo pedido pode ser isento de cobrança conforme decisão do administrador.
+RN02: Um garçom não pode editar um pedido que a cozinha já marcou como "Pronto".
 
-RN03 (Finalização): Ao finalizar um pedido, o status deve ser obrigatoriamente classificado como "Pago" ou "Não Pago" antes de ir para o histórico.
+RN03: O sistema deve impedir que um usuário seja Admin de dois restaurantes diferentes simultaneamente com o mesmo e-mail.
+
+RN04: Pedidos marcados como "Não Pago" devem ser destacados no histórico para cobrança futura.
 
 4. Requisitos Não-Funcionais (RNF)
-RNF01 (Disponibilidade): A aplicação deve ser Web e acessível via dispositivos móveis (Design Responsivo).
+RNF01 (Usabilidade): O sistema deve ser responsivo, com botões grandes para facilitar o uso em telas touch (celulares).
 
-RNF02 (Segurança): Dados de faturamento devem ser visíveis apenas para o perfil "Administrador".
+RNF02 (Confiabilidade): As fotos enviadas para cadastro de restaurante devem ser armazenadas em servidor seguro e não ser públicas.
 
-RNF03 (Performance): A atualização de status entre cozinha e garçom deve ocorrer em tempo real (baixa latência).
-Ao marcar como "Pronto", o garçom recebe notificação visual (Pop-up) e sonora/vibratória.
-
-RF04 - Gestão de Status e Notificações
-Descrição: O fluxo do pedido deve seguir os estados: Criado -> Em Preparo -> Pronto -> Entregue -> Finalizado. Regras:
-
-Campos opcionais de identificação: Mesa, Nome do Cliente e Telefone. Critério de Aceite:
-
-[ ] Validar geração de ID único sequencial ou aleatório não repetível.
+RNF03 (Performance): A atualização da lista da cozinha deve ocorrer de forma automática (via WebSockets ou polling curto) para evitar atrasos.
