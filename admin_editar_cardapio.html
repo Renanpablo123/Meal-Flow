@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>MealFlow - Editar Cardápio</title>
+</head>
+<body>
+    <main>
+        <h2>Gestão do Cardápio</h2>
+
+        <section>
+            <h3>Criar Nova Seção</h3>
+            <form>
+                <label for="nome_secao">Nome da Seção (ex: Bebidas, Entradas):</label>
+                <input type="text" id="nome_secao" name="nome_secao" required>
+                <button type="submit">Cadastrar Seção Nova</button>
+            </form>
+        </section>
+
+        <hr>
+
+        <section>
+            <h3>Cadastrar Item Novo</h3>
+            <form>
+                <div>
+                    <label for="secao_item">Selecionar Seção (obrigatório):</label>
+                    <select id="secao_item" name="secao_item" required>
+                        <option value="" disabled selected>Selecione...</option>
+                        <option value="1">Entradas</option>
+                        <option value="2">Bebidas</option>
+                        <option value="3">Pratos Principais</option>
+                    </select>
+                </div>
+                <br>
+
+                <div>
+                    <label for="nome_item">Nome do Item (obrigatório):</label>
+                    <input type="text" id="nome_item" name="nome_item" required>
+                </div>
+                <br>
+
+                <div>
+                    <label for="ingredientes">Ingredientes / Descrição (opcional):</label>
+                    <textarea id="ingredientes" name="ingredientes" rows="3"></textarea>
+                </div>
+                <br>
+
+                <div>
+                    <label for="preco">Preço (obrigatório): R$</label>
+                    <input type="number" id="preco" name="preco" step="0.01" min="0" required>
+                </div>
+                <br>
+
+                <button type="submit">Cadastrar Item</button>
+            </form>
+        </section>
+
+        <br>
+        <a href="admin_painel.html"><button type="button">Voltar ao Painel Anterior</button></a>
+    </main>
+</body>
+</html>
