@@ -1,18 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 
 <main>
-  <h1>Área do Visitante</h1>
+  <h1>Configurar Novo Restaurante</h1>
+  
+  <form action="/api/cadastrar-restaurante" method="POST">
+    
+    <div>
+      <label for="nome">Nome do Restaurante:</label>
+      <input type="text" id="nome" name="nome" required placeholder="Ex: Pizza Flow">
+    </div>
 
-  <section>
-    <img src="relogio.png" alt="Ícone de espera">
-    <p>Aguardando subscrição a um restaurante...</p>
-  </section>
+    <div>
+      <label for="cnpj">CNPJ:</label>
+      <input type="text" id="cnpj" name="cnpj" required placeholder="00.000.000/0000-00">
+    </div>
 
-  <section>
-    <p>Deseja gerenciar seu próprio negócio?</p>
-    <a href="cadastro-restaurante.html">Cadastrar seu próprio restaurante</a>
-  </section>
+    <div>
+      <label for="endereco">Endereço Completo:</label>
+      <input type="text" id="endereco" name="endereco" required>
+    </div>
+
+    <div>
+      <label for="categoria">Tipo de Cozinha:</label>
+      <select id="categoria" name="categoria" required>
+        <option value="">Selecione...</option>
+        <option value="pizzaria">Pizzaria</option>
+        <option value="hamburgueria">Hamburgueria</option>
+        <option value="brasileira">Outro</option>
+      </select>
+    </div>
+
+    <div>
+      <label for="telefone">Telefone de Contato:</label>
+      <input type="tel" id="telefone" name="telefone" required>
+    </div>
+
+    <button type="submit">Finalizar Cadastro</button>
+  </form>
+
+  <p><a href="visitante.html">Voltar para tela anterior</a></p>
 </main>
 
 </html>
