@@ -60,3 +60,62 @@ th, td {
 th {
     background-color: #eeeeee;
 }
+
+/*criação dos breakpoints*/
+
+/* =========================================
+   Atividade 3 - Responsividade (Media Queries)
+   ========================================= */
+
+/* Layout Base (Mobile First) - O código CSS lá em cima já cobre isso em parte, 
+   mas vamos garantir que tabelas e seções não quebrem em telas pequenas */
+
+table {
+    /* Força a tabela a não vazar a tela no celular */
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+/* =========================================
+   Breakpoint 1: Tablet (Telas maiores que 768px)
+   ========================================= */
+@media screen and (min-width: 768px) {
+    body {
+        padding: 40px;
+    }
+
+    section, form, article {
+        /* No tablet, as caixas podem ficar mais largas e o texto um pouco maior */
+        padding: 30px;
+        max-width: 80%;
+    }
+
+    /* Melhora a tabela no tablet, tirando o scroll horizontal se couber */
+    table {
+        display: table;
+        white-space: normal;
+    }
+}
+
+/* =========================================
+   Breakpoint 2: Desktop (Telas maiores que 1024px)
+   ========================================= */
+@media screen and (min-width: 1024px) {
+    /* No Desktop, podemos usar Flexbox para colocar os menus de navegação lado a lado */
+    nav ul {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        list-style: none;
+        padding: 0;
+    }
+
+    nav ul li {
+        margin: 0;
+    }
+
+    section, form, article {
+        max-width: 800px; /* Caixas maiores no PC */
+    }
+}
