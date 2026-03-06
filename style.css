@@ -1,0 +1,62 @@
+/* =========================================
+   Atividade 1 - Estilos Básicos do MealFlow
+   ========================================= */
+
+/* Reset básico e fonte */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    color: #333333;
+    margin: 0;
+    padding: 20px;
+    text-align: center; /* Centraliza o texto principal */
+}
+
+/* Estilo dos cabeçalhos */
+h1, h2, h3 {
+    color: #2c3e50;
+}
+
+/* Estilo dos formulários e seções (Box Model básico) */
+section, form, article {
+    background-color: #ffffff;
+    border: 1px solid #dddddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 15px auto;
+    max-width: 600px;
+    text-align: left; /* Alinha formulários à esquerda */
+}
+
+/* Estilo padrão para Botões */
+button {
+    background-color: #007bff;
+    color: #ffffff;
+    font-size: 16px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* Tabelas (Visualizar Cardápio/Histórico) */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+th, td {
+    border: 1px solid #cccccc;
+    padding: 10px;
+    text-align: center;
+}
+
+th {
+    background-color: #eeeeee;
+}
