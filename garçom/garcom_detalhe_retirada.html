@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>MealFlow - Detalhes da Retirada</title>
+</head>
+<body>
+    <main>
+        <h2>Detalhes da Retirada</h2>
+        
+        <section style="border: 1px solid #ccc; padding: 15px;">
+            <h3>Pedido #1039</h3>
+            
+            <p><strong>Nº da Mesa:</strong> 04</p>
+            <p><strong>Nome do Cliente:</strong> João <em>(ou "Não informado")</em></p>
+            <p><strong>Telefone:</strong> (11) 99999-9999 <em>(ou "Não informado")</em></p>
+            
+            <hr>
+            
+            <p><strong>Itens:</strong></p>
+            <ul>
+                <li>2x Suco de Laranja</li>
+                <li>1x Batata Frita</li>
+            </ul>
+            <p><strong>Valor Total:</strong> R$ 45,00</p>
+        </section>
+
+        <br>
+
+        <form action="garcom_painel.html" method="GET">
+            <div>
+                <label for="status_pagamento">Status do Pagamento (Obrigatório):</label>
+                <select id="status_pagamento" name="status_pagamento" required>
+                    <option value="" disabled selected>Selecione...</option>
+                    <option value="pago">Pago</option>
+                    <option value="nao_pago">Não Pago (Pendente)</option>
+                </select>
+            </div>
+            <br>
+
+            <div>
+                <label for="reclamacoes">Anotar Reclamações/Feedbacks do Cliente (Opcional):</label><br>
+                <textarea id="reclamacoes" name="reclamacoes" rows="4" cols="40" placeholder="Ex: Achou a batata fria..."></textarea>
+            </div>
+            <br>
+
+            <button type="submit">Finalizar Pedido e Entregar</button>
+            <a href="garcom_painel.html"><button type="button">Voltar sem alterar</button></a>
+        </form>
+    </main>
+</body>
+</html>

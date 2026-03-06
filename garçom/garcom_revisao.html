@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>MealFlow - Revisão do Pedido</title>
+</head>
+<body>
+    <main>
+        <h2>Revisão e Dados do Cliente</h2>
+        
+        <section style="border: 1px solid #ccc; padding: 10px;">
+            <h3>Resumo dos Itens Selecionados:</h3>
+            <ul>
+                <li>2x Suco de Laranja (Obs: Sem gelo) - R$ 20,00</li>
+                <li>1x Batata Frita (Obs: Nenhuma) - R$ 25,00</li>
+            </ul>
+            <p><strong>Total Estimado: R$ 45,00</strong></p>
+        </section>
+        <br>
+
+        <form action="garcom_sucesso.html" method="GET">
+            <fieldset>
+                <legend>Identificação (Opcional)</legend>
+                
+                <div>
+                    <label for="mesa">Nº da Mesa:</label>
+                    <input type="text" id="mesa" name="mesa">
+                </div>
+                <br>
+                <div>
+                    <label for="nome_cliente">Nome do Cliente:</label>
+                    <input type="text" id="nome_cliente" name="nome_cliente">
+                </div>
+                <br>
+                <div>
+                    <label for="telefone_cliente">Telefone:</label>
+                    <input type="tel" id="telefone_cliente" name="telefone_cliente">
+                </div>
+            </fieldset>
+            <br>
+
+            <button type="submit">Confirmar e Enviar para Cozinha</button>
+            <a href="garcom_novo_pedido.html"><button type="button">Voltar para Cardápio</button></a>
+        </form>
+    </main>
+</body>
+</html>
