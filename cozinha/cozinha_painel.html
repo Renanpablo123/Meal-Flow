@@ -15,30 +15,46 @@
         <section>
             <h2>Controle Rápido de Estoque 🛑</h2>
             <p><em>Desative itens que acabaram para removê-los do cardápio do garçom.</em></p>
-            <ul>
-                <li>Batata Frita - <button type="button">Marcar como Esgotado</button></li>
-                <li>Hambúrguer - <button type="button" style="color: red;">Reativar (Esgotado)</button></li>
+            <ul class="lista-controle">
+                <li>
+                    <span>Batata Frita</span>
+                    <button type="button" class="btn-esgotado">Marcar como Esgotado</button>
+                </li>
+                <li class="item-esgotado">
+                    <span>Hambúrguer</span>
+                    <button type="button" class="btn-reativar">Reativar Item</button>
+                </li>
             </ul>
         </section>
 
         <hr>
 
-        <section>
+        <section id="fila-pedidos">
             <h2>Fila de Pedidos</h2>
 
-            <article style="border: 2px solid #ffa500; padding: 10px; margin-bottom: 15px;">
+            <article id="pedido-1041" class="card-pedido status-aguardando">
                 <h3>Pedido #1041 - ⏱️ 19h32</h3>
                 
                 <p><strong>Itens a preparar:</strong></p>
                 <ul>
                     <li>1x Hambúrguer <br><em>Obs: Sem cebola, bem passado</em></li>
-                    <li>1x Refrigerante Lata <br><em>Obs: Nenhuma</em></li>
+                    <li>1x Refrigerante Lata</li>
                 </ul>
                 
-                <button type="button">Iniciar Preparo</button>
+                <button type="button" class="btn-acao btn-iniciar">Iniciar Preparo</button>
+
+                <br><br>
+                
+                <div class="form-cancelar hidden">
+                    <form action="cozinha_painel.html" method="GET">
+                        <label for="justificativa_1041"><strong>Cancelar Pedido:</strong></label><br>
+                        <input type="text" id="justificativa_1041" name="justificativa" placeholder="Motivo (obrigatório)..." required>
+                        <button type="submit" class="btn-cancelar">Confirmar Cancelamento</button>
+                    </form>
+                </div>
             </article>
 
-            <article style="border: 2px solid #1e90ff; padding: 10px; margin-bottom: 15px;">
+            <article id="pedido-1040" class="card-pedido status-preparando">
                 <h3>Pedido #1040 - ⏱️ 19h28 (Em Preparo)</h3>
                 
                 <p><strong>Itens a preparar:</strong></p>
@@ -46,20 +62,21 @@
                     <li>2x Suco de Laranja <br><em>Obs: Sem gelo e sem açúcar</em></li>
                 </ul>
                 
-                <button type="button" style="background-color: #90ee90;">Marcar como Pronto</button>
+                <button type="button" class="btn-acao btn-pronto">Marcar como Pronto</button>
 
                 <br><br>
                 
-                <div style="border-top: 1px dashed #ccc; padding-top: 10px;">
+                <div class="form-cancelar hidden">
                     <form action="cozinha_painel.html" method="GET">
                         <label for="justificativa_1040"><strong>Cancelar Pedido:</strong></label><br>
                         <input type="text" id="justificativa_1040" name="justificativa" placeholder="Motivo (obrigatório)..." required>
-                        <button type="submit" style="color: red;">Confirmar Cancelamento</button>
+                        <button type="submit" class="btn-cancelar">Confirmar Cancelamento</button>
                     </form>
                 </div>
             </article>
 
         </section>
     </main>
+    <script src="../script.js"></script>
 </body>
 </html>

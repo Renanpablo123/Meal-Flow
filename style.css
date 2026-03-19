@@ -28,6 +28,22 @@ section, form, article {
     text-align: left; /* Alinha formulários à esquerda */
 }
 
+/* Estilo dos inputs e textareas para consistência */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"],
+input[type="number"],
+textarea,
+select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; /* Garante que padding não afete a largura total */
+}
+
 /* Estilo padrão para Botões */
 button {
     background-color: #007bff;
@@ -42,6 +58,15 @@ button {
 
 button:hover {
     background-color: #0056b3;
+}
+
+/* Modificadores de Botão para Ações Específicas */
+.btn-cancelar {
+    background-color: #dc3545; /* Vermelho para ações destrutivas */
+}
+
+.btn-cancelar:hover {
+    background-color: #c82333;
 }
 
 /* Tabelas (Visualizar Cardápio/Histórico) */
@@ -63,6 +88,86 @@ th {
 
 /*criação dos breakpoints*/
 
+/* =========================================
+   Estilos dos Cards de Pedido (Cozinha)
+   ========================================= */
+
+.card-pedido {
+    border-width: 3px;
+    border-style: solid;
+    transition: background-color 0.3s, border-color 0.3s; /* Efeito suave na troca de cor */
+}
+
+.card-pedido.status-aguardando {
+    border-color: #ffa500; /* Laranja */
+}
+
+.card-pedido.status-preparando {
+    border-color: #1e90ff; /* Azul */
+    background-color: #f0f8ff; /* Fundo azul claro para destacar */
+}
+
+.card-pedido.status-pronto {
+    border-color: #28a745; /* Verde */
+    background-color: #f0fff0; /* Fundo verde claro */
+}
+
+.card-pedido .btn-acao {
+    font-weight: bold;
+}
+
+.card-pedido .btn-iniciar {
+    background-color: #1e90ff; /* Azul */
+}
+
+.card-pedido .btn-pronto {
+    background-color: #28a745; /* Verde */
+}
+
+.form-cancelar {
+    border-top: 1px dashed #ccc;
+    padding-top: 15px;
+    margin-top: 15px;
+}
+
+/* Utilitário para esconder elementos */
+.hidden {
+    display: none;
+}
+/* =========================================
+   Estilos do Controle de Estoque (Cozinha)
+   ========================================= */
+
+.lista-controle {
+    list-style: none;
+    padding: 0;
+}
+
+.lista-controle li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 5px;
+    border-bottom: 1px solid #eee;
+}
+
+.lista-controle li:last-child {
+    border-bottom: none;
+}
+
+.lista-controle li.item-esgotado span {
+    text-decoration: line-through;
+    color: #888;
+}
+
+.btn-esgotado {
+    background-color: #ffc107; /* Amarelo alerta */
+    color: #212529;
+}
+
+.btn-reativar {
+    background-color: #6c757d; /* Cinza neutro */
+}
 /* =========================================
    Atividade 3 - Responsividade (Media Queries)
    ========================================= */

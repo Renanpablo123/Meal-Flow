@@ -1,0 +1,77 @@
+// Espera o DOM carregar completamente para garantir que os elementos existam
+document.addEventListener('DOMContentLoaded', function() {
+
+    // Seleciona a seção que contém todos os cards de pedido
+    const filaPedidos = document.getElementById('fila-pedidos');
+
+    // Se a fila de pedidos não existir na página, não faz nada
+    if (!filaPedidos) {
+        return;
+    }
+
+    // --- Lógica para exibir formulários de cancelamento em pedidos já "Em Preparo" ao carregar a página ---
+    // Isso garante que se um pedido já está em preparo (ex: após um refresh), o formulário de cancelamento esteja visível.
+    const pedidosEmPreparoAoCarregar = filaPedidos.querySelectorAll('.card-pedido.status-preparando');
+    pedidosEmPreparoAoCarregar.forEach(card => {
+        const formCancelar = card.querySelector('.form-cancelar');
+        if (formCancelar) {
+            formCancelar.classList.remove('hidden');
+        }
+    });
+    // ----------------------------------------------------------------------------------------------------
+
+    // Adiciona um "ouvinte" de eventos na seção inteira (Event Delegation)
+    // Isso é mais eficiente do que adicionar um ouvinte para cada botão
+    filaPedidos.addEventListener('click', function(event) {
+        
+        const target = event.target; // O elemento que foi clicado
+        const card = target.closest('.card-pedido'); // Encontra o card-pai mais próximo do botão clicado
+
+        // Se o clique não foi em um botão de ação ou fora de um card, ignora
+        if (!target.classList.contains('btn-acao') || !card) {
+            return;
+        }
+
+        // Lógica para o botão "Iniciar Preparo"
+        if (target.classList.contains('btn-iniciar')) {
+            // 1. Muda o status visual do card
+            card.classList.remove('status-aguardando');
+            card.classList.add('status-preparando');
+
+            // 2. Atualiza o texto do cabeçalho do card
+            const titulo = card.querySelector('h3');
+            if (titulo && !titulo.textContent.includes('(Em Preparo)')) {
+                titulo.textContent += ' (Em Preparo)';
+            }
+
+            // 3. Transforma o botão "Iniciar Preparo" em "Marcar como Pronto"
+            target.classList.remove('btn-iniciar');
+            target.classList.add('btn-pronto');
+            target.textContent = 'Marcar como Pronto';
+
+            // 4. Abre a seção de cancelamento
+            const formCancelar = card.querySelector('.form-cancelar');
+            if (formCancelar) {
+                formCancelar.classList.remove('hidden');
+            }
+        } 
+        // Lógica para o botão "Marcar como Pronto"
+        else if (target.classList.contains('btn-pronto')) {
+            // 1. Muda o status visual do card
+            card.classList.remove('status-preparando');
+            card.classList.add('status-pronto');
+
+            // 2. Move o card para o topo da fila para dar destaque
+            filaPedidos.prepend(card);
+
+            // 3. Remove o botão de ação para indicar finalização
+            target.remove();
+
+            // 4. Oculta a seção de cancelamento (já que o pedido está pronto)
+            const formCancelar = card.querySelector('.form-cancelar');
+            if (formCancelar) {
+                formCancelar.classList.add('hidden');
+            }
+        }
+    });
+});
