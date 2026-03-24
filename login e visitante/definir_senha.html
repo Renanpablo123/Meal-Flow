@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MealFlow - Primeiro Acesso</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <header>
+        <h1>Bem-vindo ao MealFlow!</h1>
+        <p>Este é o seu primeiro acesso. Por favor, crie uma senha para sua conta de administrador.</p>
+    </header>
+    <main>
+        <form action="../administrativo/admin_painel.html" method="GET">
+            <section>
+                <h2>Crie sua Senha de Acesso</h2>
+                
+                <label for="senha">Nova Senha:</label>
+                <input type="password" id="senha" name="senha" placeholder="Mínimo 8 caracteres" required minlength="8">
+                
+                <br><br>
+                
+                <label for="repetir_senha">Confirme a Nova Senha:</label>
+                <input type="password" id="repetir_senha" name="repetir_senha" placeholder="Repita a senha" required>
+                
+                <button type="submit" style="margin-top: 20px;">Salvar Senha e Acessar o Painel</button>
+            </section>
+        </form>
+    </main>
+    <script src="../script.js"></script>
+</body>
+</html>

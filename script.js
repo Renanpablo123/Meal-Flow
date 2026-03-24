@@ -106,4 +106,47 @@ document.addEventListener('DOMContentLoaded', function() {
         toggleDetalhes();
         checkbox.addEventListener('change', toggleDetalhes);
     });
+
+    // --- Programmer Panel Authentication ---
+    // Seleciona os elementos relevantes para a autenticação do programador
+    const programmerAuthSection = document.getElementById('programmer-auth-section');
+    const programmerContent = document.getElementById('programmer-content');
+    const programmerKeyInput = document.getElementById('programmer-key-input');
+    const authenticateProgrammerBtn = document.getElementById('authenticate-programmer-btn');
+
+    // Define uma "chave secreta" para fins de demonstração.
+    // ATENÇÃO: Em uma aplicação real, esta chave NUNCA deve estar no código do cliente.
+    // A autenticação deve ser feita de forma segura em um servidor backend.
+    const PROGRAMMER_SECRET_KEY = 'superadmin123'; // Exemplo de chave
+
+    // Função para verificar o estado de autenticação do programador
+    function checkProgrammerAuthentication() {
+        // Verifica se o usuário já está autenticado nesta sessão (usando sessionStorage)
+        if (sessionStorage.getItem('isProgrammerAuthenticated') === 'true') {
+            if (programmerAuthSection) programmerAuthSection.classList.add('hidden'); // Esconde a seção de autenticação
+            if (programmerContent) programmerContent.classList.remove('hidden'); // Mostra o conteúdo do painel
+            return true;
+        }
+        // Se não autenticado, garante que o conteúdo está escondido e a seção de autenticação visível
+        if (programmerAuthSection) programmerAuthSection.classList.remove('hidden');
+        if (programmerContent) programmerContent.classList.add('hidden');
+        return false;
+    }
+
+    // Executa a verificação inicial ao carregar a página
+    checkProgrammerAuthentication();
+
+    // Adiciona um ouvinte de evento para o botão de autenticação
+    if (authenticateProgrammerBtn) {
+        authenticateProgrammerBtn.addEventListener('click', function() {
+            if (programmerKeyInput.value === PROGRAMMER_SECRET_KEY) {
+                sessionStorage.setItem('isProgrammerAuthenticated', 'true'); // Marca como autenticado na sessão
+                alert('✅ Acesso de Programador concedido!');
+                checkProgrammerAuthentication(); // Atualiza a visibilidade do conteúdo
+            } else {
+                alert('❌ Chave de Programador incorreta. Acesso negado.');
+                programmerKeyInput.value = ''; // Limpa o campo de input
+            }
+        });
+    }
 });
