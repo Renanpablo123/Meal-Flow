@@ -4,11 +4,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Seleciona a seção que contém todos os cards de pedido
     const filaPedidos = document.getElementById('fila-pedidos');
 
-    // Se a fila de pedidos não existir na página, não faz nada
-    if (!filaPedidos) {
-        return;
-    }
-
     // --- Validação de Senhas (Página de Cadastro de Usuário) ---
     // Verifica se estamos na página que tem o campo de repetir senha
     const senhaInput = document.getElementById('senha');
@@ -26,6 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // --- Lógica para exibir formulários de cancelamento em pedidos já "Em Preparo" ao carregar a página ---
     // Isso garante que se um pedido já está em preparo (ex: após um refresh), o formulário de cancelamento esteja visível.
+    if (filaPedidos) {
     const pedidosEmPreparoAoCarregar = filaPedidos.querySelectorAll('.card-pedido.status-preparando');
     pedidosEmPreparoAoCarregar.forEach(card => {
         const formCancelar = card.querySelector('.form-cancelar');
@@ -33,10 +29,12 @@ document.addEventListener('DOMContentLoaded', function() {
             formCancelar.classList.remove('hidden');
         }
     });
+    }
     // ----------------------------------------------------------------------------------------------------
 
     // Adiciona um "ouvinte" de eventos na seção inteira (Event Delegation)
     // Isso é mais eficiente do que adicionar um ouvinte para cada botão
+    if (filaPedidos) {
     filaPedidos.addEventListener('click', function(event) {
         
         const target = event.target; // O elemento que foi clicado
@@ -88,5 +86,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 formCancelar.classList.add('hidden');
             }
         }
+    });
+    }
+
+    // --- Lógica para mostrar/ocultar inputs no Cardápio (Garçom) ---
+    const checkboxesPedido = document.querySelectorAll('.checkbox-pedido');
+    checkboxesPedido.forEach(checkbox => {
+        const toggleDetalhes = () => {
+            const detalhesDiv = document.getElementById('detalhes-' + checkbox.id);
+            if (detalhesDiv) {
+                if (checkbox.checked) {
+                    detalhesDiv.classList.remove('hidden');
+                } else {
+                    detalhesDiv.classList.add('hidden');
+                }
+            }
+        };
+        // Verifica estado inicial e adiciona listener
+        toggleDetalhes();
+        checkbox.addEventListener('change', toggleDetalhes);
     });
 });

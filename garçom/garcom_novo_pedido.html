@@ -14,14 +14,16 @@
             <fieldset>
                 <legend>Bebidas</legend>
                 <div>
-                    <input type="checkbox" id="item1" name="item1" value="Suco de Laranja">
+                    <input type="checkbox" id="item1" name="item1" value="Suco de Laranja" class="checkbox-pedido">
                     <label for="item1">Suco de Laranja (R$ 10,00)</label>
-                    <br>
-                    <label for="qtd_item1">Qtd:</label>
-                    <input type="number" id="qtd_item1" name="qtd_item1" value="1" min="1" style="width: 50px;">
                     
-                    <label for="obs_item1">Obs:</label>
-                    <input type="text" id="obs_item1" name="obs_item1" placeholder="Ex: Sem gelo e sem açúcar">
+                    <div id="detalhes-item1" class="hidden" style="margin-top: 10px;">
+                        <label for="qtd_item1">Qtd:</label>
+                        <input type="number" id="qtd_item1" name="qtd_item1" value="1" min="1" style="width: 50px;">
+                        
+                        <label for="obs_item1">Obs:</label>
+                        <input type="text" id="obs_item1" name="obs_item1" placeholder="Ex: Sem gelo e sem açúcar">
+                    </div>
                 </div>
             </fieldset>
             <br>
@@ -29,19 +31,21 @@
             <fieldset>
                 <legend>Entradas</legend>
                 <div>
-                    <input type="checkbox" id="item2" name="item2" value="Batata Frita">
+                    <input type="checkbox" id="item2" name="item2" value="Batata Frita" class="checkbox-pedido">
                     <label for="item2">Batata Frita (R$ 25,00)</label>
-                    <br>
-                    <label for="qtd_item2">Qtd:</label>
-                    <input type="number" id="qtd_item2" name="qtd_item2" value="1" min="1" style="width: 50px;">
                     
-                    <label for="obs_item2">Obs:</label>
-                    <input type="text" id="obs_item2" name="obs_item2" placeholder="Ex: Metade sem sal">
+                    <div id="detalhes-item2" class="hidden" style="margin-top: 10px;">
+                        <label for="qtd_item2">Qtd:</label>
+                        <input type="number" id="qtd_item2" name="qtd_item2" value="1" min="1" style="width: 50px;">
+                        
+                        <label for="obs_item2">Obs:</label>
+                        <input type="text" id="obs_item2" name="obs_item2" placeholder="Ex: Metade sem sal">
+                    </div>
                 </div>
             </fieldset>
             <br>
 
-            <button type="submit">Avançar para Identificação e Revisão</button>
+            <button type="submit">Avançar</button>
             <a href="garcom_painel.html"><button type="button">Cancelar</button></a>
         </form>
     </main>
