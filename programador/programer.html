@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MealFlow - Área do Programador</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <header>
+        <h1>Painel do Programador (Super Admin)</h1>
+        <p>Área técnica para navegação rápida, moderação e testes do sistema.</p>
+    </header>
+    <main>
+        <!-- Seção 1: Navegação Rápida (Mapa do Site) -->
+        <section>
+            <h2>🧭 Mapa do Site (Modo Apresentação)</h2>
+            <p>Use os botões abaixo para transitar rapidamente entre os perfis durante a demonstração:</p>
+            <nav style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px;">
+                <a href="../login e visitante/login_aba.html">
+                    <button type="button">🏠 Tela Inicial / Login</button>
+                </a>
+                <a href="../administrativo/admin_painel.html">
+                    <button type="button">💼 Painel Admin (Dono)</button>
+                </a>
+                <a href="../garçom/garcom_painel.html">
+                    <button type="button">📝 Painel Garçom</button>
+                </a>
+                <a href="../cozinha/cozinha_painel.html">
+                    <button type="button">🍳 Painel Cozinha</button>
+                </a>
+            </nav>
+        </section>
+
+        <hr>
+
+        <!-- Seção 2: Moderação (Autorizar Novos Restaurantes) -->
+        <section>
+            <h2>✅ Solicitações de Cadastro</h2>
+            <p>Novos restaurantes aguardando aprovação para usar a plataforma:</p>
+            
+            <article style="border: 1px solid #ccc; padding: 15px; margin-bottom: 10px; border-radius: 5px; text-align: left;">
+                <h3>Restaurante "Sabor da Vila"</h3>
+                <ul>
+                    <li><strong>Responsável:</strong> Carlos Silva</li>
+                    <li><strong>CNPJ/CPF:</strong> 123.456.789-00</li>
+                    <li><strong>Endereço:</strong> Rua das Flores, 123 - Centro</li>
+                    <li><strong>Telefone:</strong> (11) 99999-1234</li>
+                </ul>
+                <p><strong>Status:</strong> ⏳ Aguardando Validação</p>
+                <div style="margin-top: 10px;">
+                    <button type="button" style="background-color: #28a745;">Aprovar Acesso</button>
+                    <button type="button" class="btn-cancelar">Rejeitar</button>
+                </div>
+            </article>
+
+            <article style="border: 1px solid #ccc; padding: 15px; margin-bottom: 10px; border-radius: 5px; text-align: left;">
+                <h3>Lanchonete "Burguer Kingo"</h3>
+                <ul>
+                    <li><strong>Responsável:</strong> Ana Souza</li>
+                    <li><strong>CNPJ/CPF:</strong> 987.654.321-11</li>
+                    <li><strong>Endereço:</strong> Av. Paulista, 1000</li>
+                    <li><strong>Telefone:</strong> (11) 98888-7777</li>
+                </ul>
+                <p><strong>Status:</strong> ⏳ Aguardando Validação</p>
+                <div style="margin-top: 10px;">
+                    <button type="button" style="background-color: #28a745;">Aprovar Acesso</button>
+                    <button type="button" class="btn-cancelar">Rejeitar</button>
+                </div>
+            </article>
+        </section>
+
+        <hr>
+
+        <!-- Seção 3: Administração de Restaurantes Ativos -->
+        <section>
+            <h2>🏢 Restaurantes Ativos</h2>
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome Fantasia</th>
+                        <th>Status</th>
+                        <th>Ações Administrativas</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>#001</td>
+                        <td>Pizzaria Molho de Tomate</td>
+                        <td style="color: green; font-weight: bold;">Ativo</td>
+                        <td>
+                            <a href="programador_detalhes_restaurante.html">
+                                <button type="button" style="padding: 5px 10px; font-size: 12px;">Ver Detalhes</button>
+                            </a>
+                            
+                            <!-- 
+                                [ÁREA RESTRITA] - BOTÃO DE BANIMENTO 
+                                Descomente a linha abaixo apenas em caso de violação grave dos termos de uso.
+                                Ação irreversível.
+                            -->
+                            <!-- <button type="button" class="btn-cancelar" style="padding: 5px 10px; font-size: 12px;">BANIR RESTAURANTE 🚫</button> -->
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+    <script src="../script.js"></script>
+</body>
+</html>

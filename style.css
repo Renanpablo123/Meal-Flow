@@ -4,28 +4,31 @@
 
 /* Reset básico e fonte */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f8f9fa;
+    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; /* Fonte mais moderna e legível */
+    background-color: #f4f6f9; /* Um cinza levemente azulado, mais suave */
     color: #333333;
     margin: 0;
     padding: 20px;
     text-align: center; /* Centraliza o texto principal */
+    line-height: 1.6; /* Melhora o espaçamento entre linhas para leitura */
 }
 
 /* Estilo dos cabeçalhos */
 h1, h2, h3 {
     color: #2c3e50;
+    margin-bottom: 15px;
 }
 
 /* Estilo dos formulários e seções (Box Model básico) */
 section, form, article {
     background-color: #ffffff;
-    border: 1px solid #dddddd;
+    border: 1px solid #e1e4e8; /* Borda mais suave */
     border-radius: 8px;
     padding: 20px;
     margin: 15px auto;
     max-width: 600px;
     text-align: left; /* Alinha formulários à esquerda */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05); /* Sombra suave para dar profundidade */
 }
 
 /* Estilo dos inputs e textareas para consistência */
@@ -37,27 +40,39 @@ input[type="number"],
 textarea,
 select {
     width: 100%;
-    padding: 8px;
+    padding: 10px; /* Mais espaço interno para conforto */
     margin-top: 5px;
-    border: 1px solid #ccc;
+    border: 1px solid #ced4da;
     border-radius: 4px;
     box-sizing: border-box; /* Garante que padding não afete a largura total */
+    font-size: 14px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+/* Destaque suave quando clica no campo */
+input:focus, textarea:focus, select:focus {
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
 }
 
 /* Estilo padrão para Botões */
 button {
     background-color: #007bff;
     color: #ffffff;
-    font-size: 16px;
-    padding: 10px 20px;
+    font-size: 15px;
+    padding: 12px 24px; /* Botões um pouco maiores e mais clicáveis */
     border: none;
-    border-radius: 5px;
+    border-radius: 6px;
     cursor: pointer;
     margin-top: 10px;
+    transition: background-color 0.2s, transform 0.1s;
+    font-weight: 500;
 }
 
 button:hover {
     background-color: #0056b3;
+    transform: translateY(-1px); /* Leve efeito de elevação ao passar o mouse */
 }
 
 /* Modificadores de Botão para Ações Específicas */
@@ -77,13 +92,24 @@ table {
 }
 
 th, td {
-    border: 1px solid #cccccc;
-    padding: 10px;
+    border: 1px solid #dee2e6;
+    padding: 12px;
     text-align: center;
 }
 
 th {
-    background-color: #eeeeee;
+    background-color: #e9ecef;
+    color: #495057;
+    font-weight: 600;
+}
+
+/* Zebra striping para facilitar leitura de linhas */
+tbody tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+tbody tr:hover {
+    background-color: #f1f3f5; /* Destaque ao passar o mouse na linha */
 }
 
 /*criação dos breakpoints*/
@@ -96,6 +122,7 @@ th {
     border-width: 3px;
     border-style: solid;
     transition: background-color 0.3s, border-color 0.3s; /* Efeito suave na troca de cor */
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* Sombra mais pronunciada nos cards */
 }
 
 .card-pedido.status-aguardando {

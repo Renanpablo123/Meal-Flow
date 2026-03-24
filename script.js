@@ -9,6 +9,21 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
 
+    // --- Validação de Senhas (Página de Cadastro de Usuário) ---
+    // Verifica se estamos na página que tem o campo de repetir senha
+    const senhaInput = document.getElementById('senha');
+    const repetirSenhaInput = document.getElementById('repetir_senha');
+    
+    if (senhaInput && repetirSenhaInput) {
+        const formCadastro = senhaInput.closest('form');
+        formCadastro.addEventListener('submit', function(event) {
+            if (senhaInput.value !== repetirSenhaInput.value) {
+                event.preventDefault(); // Impede o envio do formulário
+                alert("❌ Erro: As senhas não coincidem. Por favor, verifique.");
+            }
+        });
+    }
+
     // --- Lógica para exibir formulários de cancelamento em pedidos já "Em Preparo" ao carregar a página ---
     // Isso garante que se um pedido já está em preparo (ex: após um refresh), o formulário de cancelamento esteja visível.
     const pedidosEmPreparoAoCarregar = filaPedidos.querySelectorAll('.card-pedido.status-preparando');

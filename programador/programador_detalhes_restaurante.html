@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MealFlow - Detalhes do Parceiro</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <header>
+        <h1>Administração de Parceiro</h1>
+        <p>Visão técnica e gerenciamento do cliente #001</p>
+    </header>
+    <main>
+        <!-- Dados Cadastrais -->
+        <section>
+            <h2>🏢 Pizzaria Molho de Tomate (ID: #001)</h2>
+            <div style="display: flex; justify-content: space-between; flex-wrap: wrap;">
+                <div style="flex: 1; min-width: 250px;">
+                    <h3>Dados do Estabelecimento</h3>
+                    <ul>
+                        <li><strong>CNPJ:</strong> 12.345.678/0001-99</li>
+                        <li><strong>Endereço:</strong> Rua das Azeitonas, 45, Bairro Jardim</li>
+                        <li><strong>Data de Cadastro:</strong> 10/02/2023</li>
+                    </ul>
+                </div>
+                <div style="flex: 1; min-width: 250px;">
+                    <h3>Dados do Responsável (Admin)</h3>
+                    <ul>
+                        <li><strong>Nome:</strong> João do Molho</li>
+                        <li><strong>Email:</strong> joao@molho.com.br</li>
+                        <li><strong>Telefone:</strong> (11) 98765-4321</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <hr>
+
+        <!-- Métricas Rápidas -->
+        <section>
+            <h3>📊 Métricas de Uso (Últimos 30 dias)</h3>
+            <p><strong>Pedidos Processados:</strong> 1.240</p>
+            <p><strong>Faturamento Estimado:</strong> R$ 45.000,00</p>
+            <p><strong>Funcionários Ativos:</strong> 5</p>
+        </section>
+
+        <hr>
+
+        <!-- Ações Administrativas (Programador) -->
+        <section>
+            <h3>🛠️ Ações Administrativas</h3>
+            <p>Tenha cuidado, estas ações afetam diretamente o funcionamento do cliente.</p>
+            
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <button type="button">Resetar Senha do Admin</button>
+                <button type="button">Enviar Mensagem de Suporte</button>
+                <button type="button" style="background-color: #ffc107; color: #000;">Suspender Temporariamente</button>
+            </div>
+            
+            <br>
+            
+            <div style="border: 1px solid #dc3545; padding: 15px; border-radius: 5px; background-color: #fff5f5;">
+                <h4 style="color: #dc3545; margin-top: 0;">Zona de Perigo</h4>
+                <p>Ações irreversíveis ou de punição grave.</p>
+                <button type="button" class="btn-cancelar">BANIR RESTAURANTE DO SISTEMA</button>
+                <button type="button" class="btn-cancelar">Excluir Todos os Dados (GDPR)</button>
+            </div>
+        </section>
+
+        <br>
+        <a href="programer.html">
+            <button type="button">⬅ Voltar para Lista de Restaurantes</button>
+        </a>
+    </main>
+    <script src="../script.js"></script>
+</body>
+</html>
