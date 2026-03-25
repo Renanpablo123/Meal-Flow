@@ -2,10 +2,17 @@
    Atividade 1 - Estilos Básicos do MealFlow
    ========================================= */
 
+:root {
+    --primary-color: rgb(241, 90, 36);    /* Laranja MealFlow */
+    --secondary-color: rgb(76, 145, 63);  /* Verde Sucesso */
+    --dark-color: #2c3e50;
+    --light-bg: #f8f9fa;
+}
+
 /* Reset básico e fonte */
 body {
     font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; /* Fonte mais moderna e legível */
-    background-color: #f4f6f9; /* Um cinza levemente azulado, mais suave */
+    background-color: var(--light-bg);
     color: #333333;
     margin: 0;
     padding: 20px;
@@ -15,7 +22,7 @@ body {
 
 /* Estilo dos cabeçalhos */
 h1, h2, h3 {
-    color: #2c3e50;
+    color: var(--dark-color);
     margin-bottom: 15px;
 }
 
@@ -51,14 +58,14 @@ select {
 
 /* Destaque suave quando clica no campo */
 input:focus, textarea:focus, select:focus {
-    border-color: #80bdff;
+    border-color: var(--primary-color);
     outline: 0;
-    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+    box-shadow: 0 0 0 0.2rem rgba(241, 90, 14, 0.2);
 }
 
 /* Estilo padrão para Botões */
 button {
-    background-color: #007bff;
+    background-color: var(--primary-color);
     color: #ffffff;
     font-size: 15px;
     padding: 12px 24px; /* Botões um pouco maiores e mais clicáveis */
@@ -71,7 +78,7 @@ button {
 }
 
 button:hover {
-    background-color: #0056b3;
+    background-color: #d14d1b; /* Tom mais escuro do laranja */
     transform: translateY(-1px); /* Leve efeito de elevação ao passar o mouse */
 }
 
@@ -131,11 +138,11 @@ tbody tr:hover {
 
 .card-pedido.status-preparando {
     border-color: #1e90ff; /* Azul */
-    background-color: #f0f8ff; /* Fundo azul claro para destacar */
+    background-color: #ffffff;
 }
 
 .card-pedido.status-pronto {
-    border-color: #28a745; /* Verde */
+    border-color: var(--secondary-color);
     background-color: #f0fff0; /* Fundo verde claro */
 }
 
@@ -144,11 +151,15 @@ tbody tr:hover {
 }
 
 .card-pedido .btn-iniciar {
-    background-color: #1e90ff; /* Azul */
+    background-color: var(--primary-color);
 }
 
 .card-pedido .btn-pronto {
-    background-color: #28a745; /* Verde */
+    background-color: var(--secondary-color);
+}
+
+.card-pedido .btn-pronto:hover {
+    background-color: #3d7532; /* Tom mais escuro do verde */
 }
 
 .form-cancelar {
@@ -193,7 +204,7 @@ tbody tr:hover {
 }
 
 .btn-reativar {
-    background-color: #6c757d; /* Cinza neutro */
+    background-color: var(--secondary-color);
 }
 /* =========================================
    Atividade 3 - Responsividade (Media Queries)
@@ -250,4 +261,57 @@ table {
     section, form, article {
         max-width: 800px; /* Caixas maiores no PC */
     }
+}
+
+/* =========================================
+   Componente Header
+   ========================================= */
+
+.main-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    background-color: #fff;
+    border-bottom: 1px solid #e1e4e8;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    margin: -20px -20px 20px -20px; /* Counteract body padding and stick to top */
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    height: 50px;
+    margin-right: 15px;
+}
+
+.brand-name {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.brand-name .meal {
+    color: rgb(241, 90, 36);
+}
+
+.brand-name .flow {
+    color: rgb(76, 145, 63);
+}
+
+.header-title-container {
+    text-align: right;
+}
+
+.header-title-container h1 {
+    margin: 0;
+    font-size: 20px;
+}
+
+.header-title-container p {
+    margin: 0;
+    font-size: 14px;
+    color: #666;
 }
