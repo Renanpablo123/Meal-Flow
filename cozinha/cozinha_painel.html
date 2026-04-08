@@ -9,7 +9,6 @@
 <body>
     <header class="main-header">
         <div class="logo-container">
-            <img src="../assets/logo Meal-Flow.png" alt="Meal-Flow Logo" class="logo">
             <span class="brand-name">
                 <span class="meal">Meal</span><span class="flow">Flow</span>
             </span>
@@ -40,6 +39,28 @@
 
         <section id="fila-pedidos">
             <h2>Fila de Pedidos</h2>
+
+            <article id="pedido-1042" class="card-pedido status-aguardando">
+                <h3>Pedido #1042 - ⏱️ 19h35</h3>
+                
+                <p><strong>Itens a preparar:</strong></p>
+                <ul>
+                    <li>2x Prato Feito</li>
+                    <li>1x Salada Simples</li>
+                </ul>
+                
+                <button type="button" class="btn-acao btn-iniciar">Iniciar Preparo</button>
+
+                <br><br>
+                
+                <div class="form-cancelar hidden">
+                    <form action="cozinha_painel.html" method="GET">
+                        <label for="justificativa_1042"><strong>Cancelar Pedido:</strong></label><br>
+                        <input type="text" id="justificativa_1042" name="justificativa" placeholder="Motivo (obrigatório)..." required>
+                        <button type="submit" class="btn-cancelar">Confirmar Cancelamento</button>
+                    </form>
+                </div>
+            </article>
 
             <article id="pedido-1041" class="card-pedido status-aguardando">
                 <h3>Pedido #1041 - ⏱️ 19h32</h3>

@@ -15,12 +15,57 @@ body {
     background-color: var(--light-bg);
     color: #333333;
     margin: 0;
-    padding: 20px;
+    padding: 0; /* Removido para permitir sidebar de altura total */
     text-align: center; /* Centraliza o texto principal */
     line-height: 1.6; /* Melhora o espaçamento entre linhas para leitura */
 }
 
+/* Estrutura da página com sidebar fixa */
+.page-content {
+    margin-left: 280px; /* Mesmo valor da largura da sidebar */
+    padding: 20px;
+    width: calc(100% - 280px); /* Garante que o conteúdo não vaze */
+    box-sizing: border-box;
+}
+
 /* Estilo dos cabeçalhos */
+header.main-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #fff;
+    padding: 15px 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    margin-bottom: 30px;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+}
+/* A logo em imagem foi removida para um design mais limpo, mantendo apenas o nome. */
+
+.brand-name {
+    font-size: 24px;
+    font-weight: 700;
+}
+.brand-name .meal { color: var(--primary-color); }
+.brand-name .flow { color: var(--dark-color); }
+
+.header-title-container h1 {
+    margin: 0;
+    font-size: 22px;
+}
+.header-title-container p {
+    margin: 0;
+    color: #6c757d;
+}
+
+.header-actions {
+    /* Container for buttons in the header */
+}
+
 h1, h2, h3 {
     color: var(--dark-color);
     margin-bottom: 15px;
@@ -31,8 +76,8 @@ section, form, article {
     background-color: #ffffff;
     border: 1px solid #e1e4e8; /* Borda mais suave */
     border-radius: 8px;
-    padding: 20px;
-    margin: 15px auto;
+    padding: 30px;
+    margin: 20px auto;
     max-width: 600px;
     text-align: left; /* Alinha formulários à esquerda */
     box-shadow: 0 2px 8px rgba(0,0,0,0.05); /* Sombra suave para dar profundidade */
@@ -91,6 +136,33 @@ button:hover {
     background-color: #c82333;
 }
 
+.btn-aprovar {
+    background-color: var(--secondary-color);
+}
+
+.btn-aprovar:hover {
+    background-color: #3d7532;
+}
+
+.btn-secondary {
+    background-color: #6c757d; /* Cinza neutro */
+    font-size: 14px;
+    padding: 10px 20px;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+.btn-small { padding: 5px 10px; font-size: 12px; }
+
+hr {
+    border: 0;
+    height: 1px;
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0));
+    margin: 40px 0;
+}
+
 /* Tabelas (Visualizar Cardápio/Histórico) */
 table {
     width: 100%;
@@ -118,6 +190,12 @@ tbody tr:nth-child(even) {
 tbody tr:hover {
     background-color: #f1f3f5; /* Destaque ao passar o mouse na linha */
 }
+
+.status-ativo {
+    color: var(--secondary-color);
+    font-weight: bold;
+}
+
 
 /*criação dos breakpoints*/
 
@@ -206,6 +284,179 @@ tbody tr:hover {
 .btn-reativar {
     background-color: var(--secondary-color);
 }
+
+/* =========================================
+   Estilos do Painel do Programador
+   ========================================= */
+
+/* Layout de duas colunas para detalhes */
+.two-column-layout {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 30px;
+}
+
+.two-column-layout > div {
+    flex: 1;
+    min-width: 280px;
+}
+
+/* Botões de ação agrupados */
+.action-buttons {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* Caixa de alerta para ações perigosas */
+.danger-zone {
+    border: 2px solid #dc3545;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #fff5f5;
+    margin-top: 25px;
+}
+
+.danger-zone h4 {
+    color: #dc3545;
+    margin-top: 0;
+    font-size: 18px;
+}
+
+/* Navegação do Painel Admin */
+.admin-nav ul {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.admin-nav li a {
+    text-decoration: none;
+}
+
+.admin-nav li button {
+    width: 100%;
+    padding: 25px;
+    font-size: 18px;
+    text-align: center;
+    height: 100%;
+}
+
+/* Lista de Pedidos Prontos (Garçom) */
+.ready-orders-list {
+    list-style: none;
+    padding: 0;
+}
+
+.ready-orders-list li {
+    margin-bottom: 15px;
+}
+
+.ready-orders-list li a {
+    display: block;
+    padding: 20px;
+    background-color: #f0fff0;
+    border-left: 5px solid var(--secondary-color);
+    text-decoration: none;
+    color: var(--dark-color);
+    font-weight: 600;
+    border-radius: 0 8px 8px 0;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.ready-orders-list li a:hover {
+    background-color: #e0fbe0;
+    transform: translateX(5px);
+}
+
+/* Animação para a sidebar entrar na tela */
+@keyframes slideInFromLeft {
+    from {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.sidebar-nav {
+    position: fixed; /* Fixa a sidebar na tela */
+    left: 0;
+    top: 0;
+    height: 100vh; /* Ocupa toda a altura da tela */
+    width: 280px;
+    background-color: #ffffff;
+    box-shadow: 4px 0px 15px rgba(0,0,0,0.08);
+    padding: 25px;
+    animation: slideInFromLeft 0.5s ease-out forwards;
+}
+
+.sidebar-nav h2 {
+    text-align: center;
+    margin-top: 0;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+}
+
+.sidebar-nav a {
+    text-decoration: none;
+}
+
+.sidebar-nav button {
+    width: 100%;
+    text-align: left;
+    margin-bottom: 10px;
+    background-color: #f8f9fa;
+    color: var(--dark-color);
+    font-weight: 600;
+    border: 1px solid #e1e4e8;
+}
+
+.sidebar-nav button:hover {
+    background-color: var(--primary-color);
+    color: #ffffff;
+    border-color: var(--primary-color);
+    transform: translateX(5px) translateY(0); /* Move para a direita no hover */
+}
+
+.sidebar-nav #logout-programmer-btn {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.auth-form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+#programmer-key-input {
+    width: 250px;
+    text-align: center;
+}
+
+/* Estilos para a página inicial (index.html) */
+.hero-section {
+    max-width: 800px;
+    padding: 50px 20px;
+}
+.hero-section p {
+    font-size: 1.1rem;
+    color: #555;
+}
+.hero-section .btn-large {
+    padding: 15px 40px;
+    font-size: 1.2rem;
+    margin-top: 20px;
+}
+
 /* =========================================
    Atividade 3 - Responsividade (Media Queries)
    ========================================= */
@@ -261,57 +512,4 @@ table {
     section, form, article {
         max-width: 800px; /* Caixas maiores no PC */
     }
-}
-
-/* =========================================
-   Componente Header
-   ========================================= */
-
-.main-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px 20px;
-    background-color: #fff;
-    border-bottom: 1px solid #e1e4e8;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    margin: -20px -20px 20px -20px; /* Counteract body padding and stick to top */
-}
-
-.logo-container {
-    display: flex;
-    align-items: center;
-}
-
-.logo {
-    height: 50px;
-    margin-right: 15px;
-}
-
-.brand-name {
-    font-size: 24px;
-    font-weight: bold;
-}
-
-.brand-name .meal {
-    color: rgb(241, 90, 36);
-}
-
-.brand-name .flow {
-    color: rgb(76, 145, 63);
-}
-
-.header-title-container {
-    text-align: right;
-}
-
-.header-title-container h1 {
-    margin: 0;
-    font-size: 20px;
-}
-
-.header-title-container p {
-    margin: 0;
-    font-size: 14px;
-    color: #666;
 }

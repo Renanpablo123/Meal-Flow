@@ -111,25 +111,40 @@ document.addEventListener('DOMContentLoaded', function() {
     // Seleciona os elementos relevantes para a autenticação do programador
     const programmerAuthSection = document.getElementById('programmer-auth-section');
     const programmerContent = document.getElementById('programmer-content');
+    const programmerSidebar = document.getElementById('programmer-sidebar');
     const programmerKeyInput = document.getElementById('programmer-key-input');
     const authenticateProgrammerBtn = document.getElementById('authenticate-programmer-btn');
+    const logoutProgrammerBtn = document.getElementById('logout-programmer-btn');
 
-    // Define uma "chave secreta" para fins de demonstração.
-    // ATENÇÃO: Em uma aplicação real, esta chave NUNCA deve estar no código do cliente.
-    // A autenticação deve ser feita de forma segura em um servidor backend.
-    const PROGRAMMER_SECRET_KEY = 'superadmin123'; // Exemplo de chave
+    // --- Gerenciamento da Chave do Programador ---
+    const DEFAULT_PROGRAMMER_KEY = 'superadmin123';
+    const PROGRAMMER_KEY_STORAGE_ITEM = 'programmerSecretKey';
 
+    // Função para obter a chave atual do programador (do localStorage ou padrão)
+    function getProgrammerKey() {
+        let key = localStorage.getItem(PROGRAMMER_KEY_STORAGE_ITEM);
+        if (!key) {
+            // Se nenhuma chave estiver no armazenamento, define a padrão
+            localStorage.setItem(PROGRAMMER_KEY_STORAGE_ITEM, DEFAULT_PROGRAMMER_KEY);
+            return DEFAULT_PROGRAMMER_KEY;
+        }
+        return key;
+    }
+
+    // --- Lógica de Autenticação e Visibilidade ---
     // Função para verificar o estado de autenticação do programador
     function checkProgrammerAuthentication() {
         // Verifica se o usuário já está autenticado nesta sessão (usando sessionStorage)
         if (sessionStorage.getItem('isProgrammerAuthenticated') === 'true') {
             if (programmerAuthSection) programmerAuthSection.classList.add('hidden'); // Esconde a seção de autenticação
+            if (programmerSidebar) programmerSidebar.classList.remove('hidden'); // Mostra a sidebar
             if (programmerContent) programmerContent.classList.remove('hidden'); // Mostra o conteúdo do painel
             return true;
         }
         // Se não autenticado, garante que o conteúdo está escondido e a seção de autenticação visível
         if (programmerAuthSection) programmerAuthSection.classList.remove('hidden');
         if (programmerContent) programmerContent.classList.add('hidden');
+        if (programmerSidebar) programmerSidebar.classList.add('hidden');
         return false;
     }
 
@@ -139,7 +154,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Adiciona um ouvinte de evento para o botão de autenticação
     if (authenticateProgrammerBtn) {
         authenticateProgrammerBtn.addEventListener('click', function() {
-            if (programmerKeyInput.value === PROGRAMMER_SECRET_KEY) {
+            if (programmerKeyInput.value === getProgrammerKey()) {
                 sessionStorage.setItem('isProgrammerAuthenticated', 'true'); // Marca como autenticado na sessão
                 alert('✅ Acesso de Programador concedido!');
                 checkProgrammerAuthentication(); // Atualiza a visibilidade do conteúdo
@@ -147,6 +162,26 @@ document.addEventListener('DOMContentLoaded', function() {
                 alert('❌ Chave de Programador incorreta. Acesso negado.');
                 programmerKeyInput.value = ''; // Limpa o campo de input
             }
+        });
+    }
+
+    // Adiciona um ouvinte para a tecla "Enter" no campo de senha
+    if (programmerKeyInput) {
+        programmerKeyInput.addEventListener('keyup', function(event) {
+            // Verifica se a tecla pressionada foi "Enter" (código 13)
+            if (event.keyCode === 13) {
+                event.preventDefault(); // Previne qualquer ação padrão do "Enter"
+                authenticateProgrammerBtn.click(); // Simula um clique no botão de acesso
+            }
+        });
+    }
+
+    // Adiciona um ouvinte de evento para o botão de logout
+    if (logoutProgrammerBtn) {
+        logoutProgrammerBtn.addEventListener('click', function() {
+            sessionStorage.removeItem('isProgrammerAuthenticated');
+            alert('Sessão de programador encerrada.');
+            location.reload();
         });
     }
 });

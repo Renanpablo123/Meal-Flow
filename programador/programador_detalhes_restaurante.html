@@ -9,7 +9,6 @@
 <body>
     <header class="main-header">
         <div class="logo-container">
-            <img src="../assets/logo Meal-Flow.png" alt="Meal-Flow Logo" class="logo">
             <span class="brand-name">
                 <span class="meal">Meal</span><span class="flow">Flow</span>
             </span>
@@ -18,13 +17,18 @@
             <h1>Administração de Parceiro</h1>
             <p>Visão técnica e gerenciamento do cliente #001</p>
         </div>
+        <div class="header-actions">
+            <a href="programer.html">
+                <button type="button" class="btn-secondary">⬅ Voltar</button>
+            </a>
+        </div>
     </header>
     <main>
         <!-- Dados Cadastrais -->
         <section>
             <h2>🏢 Pizzaria Molho de Tomate (ID: #001)</h2>
-            <div style="display: flex; justify-content: space-between; flex-wrap: wrap;">
-                <div style="flex: 1; min-width: 250px;">
+            <div class="two-column-layout">
+                <div>
                     <h3>Dados do Estabelecimento</h3>
                     <ul>
                         <li><strong>CNPJ:</strong> 12.345.678/0001-99</li>
@@ -32,7 +36,7 @@
                         <li><strong>Data de Cadastro:</strong> 10/02/2023</li>
                     </ul>
                 </div>
-                <div style="flex: 1; min-width: 250px;">
+                <div>
                     <h3>Dados do Responsável (Admin)</h3>
                     <ul>
                         <li><strong>Nome:</strong> João do Molho</li>
@@ -45,41 +49,34 @@
 
         <hr>
 
-        <!-- Métricas Rápidas -->
+        <!-- Métricas Rápidas & Ações -->
         <section>
-            <h3>📊 Métricas de Uso (Últimos 30 dias)</h3>
-            <p><strong>Pedidos Processados:</strong> 1.240</p>
-            <p><strong>Faturamento Estimado:</strong> R$ 45.000,00</p>
-            <p><strong>Funcionários Ativos:</strong> 5</p>
-        </section>
-
-        <hr>
-
-        <!-- Ações Administrativas (Programador) -->
-        <section>
-            <h3>🛠️ Ações Administrativas</h3>
-            <p>Tenha cuidado, estas ações afetam diretamente o funcionamento do cliente.</p>
-            
-            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                <button type="button">Resetar Senha do Admin</button>
-                <button type="button">Enviar Mensagem de Suporte</button>
-                <button type="button" style="background-color: #ffc107; color: #000;">Suspender Temporariamente</button>
+            <div class="two-column-layout">
+                <div>
+                    <h3>📊 Métricas de Uso (Últimos 30 dias)</h3>
+                    <p><strong>Pedidos Processados:</strong> 1.240</p>
+                    <p><strong>Faturamento Estimado:</strong> R$ 45.000,00</p>
+                    <p><strong>Funcionários Ativos:</strong> 5</p>
+                </div>
+                <div>
+                    <h3>🛠️ Ações Administrativas</h3>
+                    <p>Ações rápidas que afetam diretamente o funcionamento do cliente.</p>
+                    <div class="action-buttons">
+                        <button type="button">Resetar Senha do Admin</button>
+                        <button type="button" class="btn-esgotado">Suspender Temporariamente</button>
+                    </div>
+                </div>
             </div>
-            
-            <br>
-            
-            <div style="border: 1px solid #dc3545; padding: 15px; border-radius: 5px; background-color: #fff5f5;">
-                <h4 style="color: #dc3545; margin-top: 0;">Zona de Perigo</h4>
+            <div class="danger-zone">
+                <h4>Zona de Perigo</h4>
                 <p>Ações irreversíveis ou de punição grave.</p>
-                <button type="button" class="btn-cancelar">BANIR RESTAURANTE DO SISTEMA</button>
-                <button type="button" class="btn-cancelar">Excluir Todos os Dados (GDPR)</button>
+                <div class="action-buttons">
+                    <button type="button" class="btn-cancelar">BANIR RESTAURANTE</button>
+                    <button type="button" class="btn-cancelar">Excluir Dados (GDPR)</button>
+                </div>
             </div>
         </section>
 
-        <br>
-        <a href="programer.html">
-            <button type="button">⬅ Voltar para Lista de Restaurantes</button>
-        </a>
     </main>
     <script src="../db.js"></script>
     <script src="../script.js"></script>
