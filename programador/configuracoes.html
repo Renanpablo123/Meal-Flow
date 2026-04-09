@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MealFlow - Configurações do Programador</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <!-- Sidebar de Navegação Fixa -->
+    <nav id="programmer-sidebar" class="sidebar-nav hidden">
+        <h2>🧭 Navegação</h2>
+        <a href="../login e visitante/login_aba.html"><button type="button">🏠 Home</button></a>
+        <a href="../administrativo/admin_painel.html"><button type="button">💼 Painel Admin (Dono)</button></a>
+        <a href="../garçom/garcom_painel.html"><button type="button">📝 Painel Garçom</button></a>
+        <a href="../cozinha/cozinha_painel.html"><button type="button">🍳 Painel Cozinha</button></a>
+        <hr>
+        <a href="configuracoes.html"><button type="button">⚙️ Configurações</button></a>
+        <hr>
+        <button type="button" id="logout-programmer-btn" class="btn-cancelar">Sair (Logout) 🚪</button>
+    </nav>
+
+    <div class="page-content">
+        <header class="main-header">
+            <div class="logo-container">
+                <span class="brand-name">
+                    <span class="meal">Meal</span><span class="flow">Flow</span>
+                </span>
+            </div>
+            <div class="header-title-container">
+                <h1>Configurações (Super Admin)</h1>
+                <p>Gerenciamento de segurança e outras configurações avançadas.</p>
+            </div>
+        </header>
+
+        <main>
+            <!-- Programmer Authentication Section -->
+            <section id="programmer-auth-section">
+                <h2>🔒 Autenticação de Programador</h2>
+                <p>Por favor, insira a chave de acesso para visualizar as configurações.</p>
+                <div class="auth-form-container">
+                    <input type="password" id="programmer-key-input" placeholder="Chave de Acesso">
+                    <button type="button" id="authenticate-programmer-btn">Acessar Painel</button>
+                </div>
+            </section>
+    
+            <div id="programmer-content" class="hidden">
+                <!-- Seção: Gerenciamento de Segurança -->
+                <section>
+                    <h2>🔑 Gerenciamento de Segurança</h2>
+                    <p>Redefina a senha de um usuário do sistema (dono de restaurante, garçom, etc.) em caso de perda de acesso.</p>
+                    <div class="auth-form-container">
+                        <input type="text" id="user-id-for-reset" placeholder="ID ou E-mail do Usuário">
+                        <button type="button" id="reset-user-password-btn">Redefinir Senha</button>
+                    </div>
+                    <p style="font-size: 0.8rem; color: #666; margin-top: 0.5rem;"><strong>Nota:</strong> Uma senha temporária será gerada e o usuário deverá alterá-la no próximo login.</p>
+                </section>
+            </div>
+        </main>
+
+    </div>
+    <script src="../db.js"></script>
+    <script src="../script.js"></script>
+</body>
+</html>
