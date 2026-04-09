@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MealFlow - Configurações do Programador</title>
+    <title>MealFlow - Testes de Visualização</title>
     <link rel="stylesheet" href="../style.css">
 </head>
 <body>
@@ -29,8 +29,8 @@
                 </span>
             </div>
             <div class="header-title-container">
-                <h1>Configurações (Super Admin)</h1>
-                <p>Gerenciamento de segurança e outras configurações avançadas.</p>
+                <h1>Atalhos de Teste (Visualização)</h1>
+                <p>Acesso rápido às diferentes interfaces do sistema para fins de desenvolvimento.</p>
             </div>
         </header>
 
@@ -38,7 +38,7 @@
             <!-- Programmer Authentication Section -->
             <section id="programmer-auth-section">
                 <h2>🔒 Autenticação de Programador</h2>
-                <p>Por favor, insira a chave de acesso para visualizar as configurações.</p>
+                <p>Por favor, insira a chave de acesso para visualizar as opções de teste.</p>
                 <div class="auth-form-container">
                     <input type="password" id="programmer-key-input" placeholder="Chave de Acesso">
                     <button type="button" id="authenticate-programmer-btn">Acessar Painel</button>
@@ -46,19 +46,20 @@
             </section>
     
             <div id="programmer-content" class="hidden">
-                <!-- Seção: Gerenciamento de Segurança -->
                 <section>
-                    <h2>🔑 Gerenciamento de Segurança</h2>
-                    <p>Redefina a senha de um usuário do sistema (dono de restaurante, garçom, etc.) em caso de perda de acesso.</p>
-                    <div class="auth-form-container">
-                        <input type="text" id="user-id-for-reset" placeholder="ID ou E-mail do Usuário">
-                        <button type="button" id="reset-user-password-btn">Redefinir Senha</button>
+                    <h2>🧪 Interfaces do Sistema</h2>
+                    <p>Clique nos botões abaixo para visualizar como cada perfil enxerga o sistema:</p>
+                    <div class="admin-nav">
+                        <ul>
+                            <li><a href="../login e visitante/login_aba.html"><button type="button">🏠 Home / Login</button></a></li>
+                            <li><a href="../administrativo/admin_painel.html"><button type="button">💼 Painel Admin (Dono)</button></a></li>
+                            <li><a href="../garçom/garcom_painel.html"><button type="button">📝 Painel Garçom</button></a></li>
+                            <li><a href="../cozinha/cozinha_painel.html"><button type="button">🍳 Painel Cozinha</button></a></li>
+                        </ul>
                     </div>
-                    <p style="font-size: 0.8rem; color: #666; margin-top: 0.5rem;"><strong>Nota:</strong> Uma senha temporária será gerada e o usuário deverá alterá-la no próximo login.</p>
                 </section>
             </div>
         </main>
-
     </div>
     <script src="../db.js"></script>
     <script src="../script.js"></script>

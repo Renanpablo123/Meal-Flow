@@ -396,6 +396,10 @@ tbody tr:hover {
     padding: 25px;
     animation: slideInFromLeft 0.5s ease-out forwards;
 }
+.sidebar-nav {
+    display: flex; /* Ativa o Flexbox */
+    flex-direction: column; /* Organiza os itens em coluna */
+}
 
 .sidebar-nav h2 {
     text-align: center;
@@ -403,15 +407,32 @@ tbody tr:hover {
     border-bottom: 1px solid #eee;
     padding-bottom: 15px;
 }
+.sidebar-nav h2 {
+    margin-bottom: 15px; /* Espaçamento abaixo do título */
+}
 
 .sidebar-nav a {
     text-decoration: none;
 }
 
+.sidebar-top-group {
+    flex-grow: 1; /* Faz este grupo ocupar o espaço restante, empurrando o de baixo */
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Espaçamento de 10px entre os botões deste grupo */
+    margin-bottom: 15px; /* Espaçamento entre o grupo superior e o inferior */
+}
+
+.sidebar-bottom-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Espaçamento de 10px entre os botões deste grupo */
+    margin-bottom: 50px; /* Sobe o grupo para evitar colisão com a barra de tarefas do SO */
+}
+
 .sidebar-nav button {
     width: 100%;
     text-align: left;
-    margin-bottom: 10px;
     background-color: #f8f9fa;
     color: var(--dark-color);
     font-weight: 600;
@@ -426,8 +447,7 @@ tbody tr:hover {
 }
 
 .sidebar-nav #logout-programmer-btn {
-    text-align: center;
-    margin-top: 20px;
+    text-align: left;
 }
 
 .auth-form-container {
