@@ -71,9 +71,9 @@ function iniciarDB() {
 }
 
 /**
- * 2. ADICIONAR ITEM (Create)
+ * 2. SALVAR ITEM (Create)
  */
-async function adicionarItem(storeName, item) {
+async function salvar(storeName, item) {
     const db = await iniciarDB();
     return new Promise((resolve, reject) => {
         const transaction = db.transaction([storeName], "readwrite");

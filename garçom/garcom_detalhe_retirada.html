@@ -27,25 +27,24 @@
         <h2>Detalhes da Retirada</h2>
         
         <section style="border: 1px solid #ccc; padding: 15px;">
-            <h3>Pedido #1039</h3>
+            <h3 id="detalhe-id">Pedido #---</h3>
             
-            <p><strong>Nº da Mesa:</strong> 04</p>
-            <p><strong>Nome do Cliente:</strong> João <em>(ou "Não informado")</em></p>
-            <p><strong>Telefone:</strong> (11) 99999-9999 <em>(ou "Não informado")</em></p>
+            <p><strong>Nº da Mesa:</strong> <span id="detalhe-mesa">---</span></p>
+            <p><strong>Nome do Cliente:</strong> <span id="detalhe-cliente">---</span></p>
+            <p><strong>Telefone:</strong> <span id="detalhe-telefone">---</span></p>
             
             <hr>
             
             <p><strong>Itens:</strong></p>
-            <ul>
-                <li>2x Suco de Laranja</li>
-                <li>1x Batata Frita</li>
+            <ul id="detalhe-itens">
+                <!-- Preenchido dinamicamente -->
             </ul>
-            <p><strong>Valor Total:</strong> R$ 45,00</p>
+            <p><strong>Valor Total:</strong> R$ <span id="detalhe-total">0,00</span></p>
         </section>
 
         <br>
 
-        <form action="garcom_painel.html" method="GET">
+        <form id="form-finalizar-pedido">
             <div>
                 <label for="status_pagamento">Status do Pagamento (Obrigatório):</label>
                 <select id="status_pagamento" name="status_pagamento" required>

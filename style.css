@@ -373,6 +373,30 @@ tbody tr:hover {
     transform: translateX(5px);
 }
 
+/* Cores de Status para a Lista do Garçom */
+.order-item-aguardando a {
+    background-color: #fff9c4 !important; /* Amarelo claro */
+    border-left-color: #fbc02d !important;
+    cursor: not-allowed;
+    pointer-events: none; /* Desabilita o clique */
+    opacity: 0.9;
+}
+
+.order-item-preparando a {
+    background-color: #e3f2fd !important; /* Azul claro */
+    border-left-color: #1e88e5 !important;
+    cursor: not-allowed;
+    pointer-events: none;
+    opacity: 0.9;
+}
+
+.status-tag {
+    float: right;
+    font-size: 0.75rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
 /* Animação para a sidebar entrar na tela */
 @keyframes slideInFromLeft {
     from {

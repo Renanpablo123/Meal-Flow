@@ -28,15 +28,14 @@
         
         <section style="border: 1px solid #ccc; padding: 10px;">
             <h3>Resumo dos Itens Selecionados:</h3>
-            <ul>
-                <li>2x Suco de Laranja (Obs: Sem gelo) - R$ 20,00</li>
-                <li>1x Batata Frita (Obs: Nenhuma) - R$ 25,00</li>
+            <ul id="lista-resumo-itens">
+                <!-- Preenchido dinamicamente pelo script.js -->
             </ul>
-            <p><strong>Total Estimado: R$ 45,00</strong></p>
+            <p><strong>Total Estimado: R$ <span id="valor-total-resumo">0,00</span></strong></p>
         </section>
         <br>
 
-        <form action="garcom_sucesso.html" method="GET">
+        <form id="form-revisao-pedido">
             <fieldset>
                 <legend>Identificação (Opcional)</legend>
                 
