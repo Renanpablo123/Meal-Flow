@@ -50,34 +50,9 @@
                 <section>
                     <h2>✅ Solicitações de Cadastro</h2>
                     <p>Novos restaurantes aguardando aprovação para usar a plataforma:</p>
-                    <article class="moderation-card">
-                        <h3>Restaurante "Sabor da Vila"</h3>
-                        <ul>
-                            <li><strong>Responsável:</strong> Carlos Silva</li>
-                            <li><strong>CNPJ/CPF:</strong> 123.456.789-00</li>
-                            <li><strong>Endereço:</strong> Rua das Flores, 123 - Centro</li>
-                            <li><strong>Telefone:</strong> (11) 99999-1234</li>
-                        </ul>
-                        <p><strong>Status:</strong> ⏳ Aguardando Validação</p>
-                        <div class="action-buttons">
-                            <button type="button" class="btn-aprovar">Aprovar Acesso</button>
-                            <button type="button" class="btn-cancelar">Rejeitar</button>
-                        </div>
-                    </article>
-                    <article class="moderation-card">
-                        <h3>Lanchonete "Burguer Kingo"</h3>
-                        <ul>
-                            <li><strong>Responsável:</strong> Ana Souza</li>
-                            <li><strong>CNPJ/CPF:</strong> 987.654.321-11</li>
-                            <li><strong>Endereço:</strong> Av. Paulista, 1000</li>
-                            <li><strong>Telefone:</strong> (11) 98888-7777</li>
-                        </ul>
-                        <p><strong>Status:</strong> ⏳ Aguardando Validação</p>
-                        <div class="action-buttons">
-                            <button type="button" class="btn-aprovar">Aprovar Acesso</button>
-                            <button type="button" class="btn-cancelar">Rejeitar</button>
-                        </div>
-                    </article>
+                    <div id="solicitacoes-cadastro-container">
+                        <!-- Carregado dinamicamente via JavaScript -->
+                    </div>
                 </section>
                 <hr>
                 <!-- Seção 2: Administração de Restaurantes Ativos -->
@@ -92,29 +67,8 @@
                                 <th>Ações Administrativas</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td>#001</td>
-                                <td>Pizzaria Molho de Tomate</td>
-                                <td class="status-ativo">Ativo</td>
-                                <td>
-                                    <a href="programador_detalhes_restaurante.html">
-                                        <button type="button" class="btn-small">Ver Detalhes</button>
-                                    </a>
-                                    <!-- <button type="button" class="btn-cancelar btn-small">BANIR RESTAURANTE 🚫</button> -->
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>#002</td>
-                                <td>Cantina da Esquina</td>
-                                <td class="status-ativo">Ativo</td>
-                                <td>
-                                    <a href="programador_detalhes_restaurante.html">
-                                        <button type="button" class="btn-small">Ver Detalhes</button>
-                                    </a>
-                                    <!-- <button type="button" class="btn-cancelar btn-small">BANIR RESTAURANTE 🚫</button> -->
-                                </td>
-                            </tr>
+                        <tbody id="restaurantes-ativos-body">
+                            <!-- Carregado dinamicamente via JavaScript -->
                         </tbody>
                     </table>
                 </section>

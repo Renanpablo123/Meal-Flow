@@ -106,23 +106,179 @@ document.addEventListener('DOMContentLoaded', function() {
         setInterval(atualizarFilaCozinha, 3000);
     }
 
-    // --- Lógica para mostrar/ocultar inputs no Cardápio (Garçom) ---
-    const checkboxesPedido = document.querySelectorAll('.checkbox-pedido');
-    checkboxesPedido.forEach(checkbox => {
-        const toggleDetalhes = () => {
-            const detalhesDiv = document.getElementById('detalhes-' + checkbox.id);
-            if (detalhesDiv) {
-                if (checkbox.checked) {
-                    detalhesDiv.classList.remove('hidden');
-                } else {
-                    detalhesDiv.classList.add('hidden');
-                }
+    // --- Lógica de Cardápio Dinâmico e Unificado ---
+    async function atualizarCardapioDinamico() {
+        const containerGarcom = document.getElementById('cardapio-garcom');
+        const containerAdmin = document.getElementById('cardapio-admin');
+        if (!containerGarcom && !containerAdmin) return;
+
+        const categorias = await buscarTodos('categorias');
+        const produtos = await buscarTodos('produtos');
+
+        const renderizar = (container, perfil) => {
+            container.innerHTML = '';
+            if (categorias.length === 0) {
+                container.innerHTML = '<p>Nenhuma seção cadastrada no cardápio.</p>';
+                return;
+            }
+
+            categorias.forEach(cat => {
+                const section = document.createElement('section');
+                section.innerHTML = `<h3>📂 ${cat.nome}</h3>`;
+                const itens = produtos.filter(p => p.categoriaId === cat.id);
+
+                itens.forEach(prod => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'menu-item-row';
+                    itemDiv.style.borderBottom = "1px solid #eee";
+                    itemDiv.style.padding = "10px 0";
+
+                    if (perfil === 'garcom') {
+                        itemDiv.innerHTML = `
+                            <label>
+                                <input type="checkbox" class="checkbox-pedido" id="prod-${prod.id}" name="item${prod.id}" value="${prod.id}">
+                                <strong>${prod.nome}</strong> - R$ ${prod.preco.toFixed(2)}
+                            </label>
+                            <div id="detalhes-prod-${prod.id}" class="hidden" style="margin-top:5px; padding-left:25px;">
+                                <input type="number" name="qtd_item${prod.id}" value="1" min="1" style="width:60px">
+                                <input type="text" name="obs_item${prod.id}" placeholder="Observação...">
+                            </div>
+                        `;
+                    } else {
+                        itemDiv.innerHTML = `
+                            <span><strong>${prod.nome}</strong> - R$ ${prod.preco.toFixed(2)}</span>
+                            <div style="float:right">
+                                <button type="button" class="btn-small">Editar</button>
+                                <button type="button" class="btn-small btn-cancelar">Remover</button>
+                            </div>
+                        `;
+                    }
+                    section.appendChild(itemDiv);
+                });
+                container.appendChild(section);
+            });
+
+            if (perfil === 'garcom') {
+                container.querySelectorAll('.checkbox-pedido').forEach(cb => {
+                    cb.addEventListener('change', () => {
+                        const detalhes = document.getElementById('detalhes-' + cb.id);
+                        if (detalhes) detalhes.classList.toggle('hidden', !cb.checked);
+                    });
+                });
             }
         };
-        // Verifica estado inicial e adiciona listener
-        toggleDetalhes();
-        checkbox.addEventListener('change', toggleDetalhes);
-    });
+
+        if (containerGarcom) renderizar(containerGarcom, 'garcom');
+        if (containerAdmin) renderizar(containerAdmin, 'admin');
+    }
+
+    // --- Lógica de Histórico de Pedidos (Admin) ---
+    async function atualizarHistoricoAdmin() {
+        const containerHistorico = document.getElementById('historico-pedidos-admin');
+        if (!containerHistorico) return;
+
+        const pedidos = await buscarTodos('pedidos');
+        containerHistorico.innerHTML = '';
+
+        const entregues = pedidos.filter(p => p.status === 'entregue');
+        if (entregues.length === 0) {
+            containerHistorico.innerHTML = '<p>Nenhum pedido finalizado no histórico.</p>';
+            return;
+        }
+
+        entregues.reverse().forEach(p => {
+            const card = document.createElement('article');
+            card.className = 'history-card';
+            card.style.borderLeft = "5px solid var(--secondary-color)";
+            card.innerHTML = `
+                <h3>Pedido #${p.id}</h3>
+                <p><strong>Mesa:</strong> ${p.mesa} | <strong>Cliente:</strong> ${p.cliente}</p>
+                <p><strong>Total:</strong> R$ ${p.total.toFixed(2)} | <strong>Pagamento:</strong> ${p.statusPagamento || 'Confirmado'}</p>
+                <p><small>Entregue em: ${new Date(p.dataEntrega).toLocaleString()}</small></p>
+            `;
+            containerHistorico.appendChild(card);
+        });
+    }
+
+    // Chamadas Iniciais
+    atualizarCardapioDinamico();
+    atualizarHistoricoAdmin();
+
+    // --- Lógica de Detalhes do Restaurante (Página do Programador) ---
+    async function carregarDetalhesRestaurante() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const restId = parseInt(urlParams.get('id'));
+        if (!restId || !document.getElementById('info-titulo-nome')) return;
+
+        const restaurantes = await buscarTodos('restaurantes');
+        const rest = restaurantes.find(r => r.id === restId);
+
+        if (rest) {
+            document.getElementById('info-id-topo').textContent = `#${rest.id}`;
+            document.getElementById('info-titulo-nome').textContent = `🏢 ${rest.nomeFantasia}`;
+            document.getElementById('info-documento').textContent = rest.documento || 'Não informado';
+            document.getElementById('info-endereco').textContent = rest.endereco || 'Não informado';
+            document.getElementById('info-data').textContent = rest.dataSolicitacao ? new Date(rest.dataSolicitacao).toLocaleDateString() : '---';
+            document.getElementById('info-responsavel').textContent = rest.responsavel;
+            document.getElementById('info-telefone').textContent = rest.telefone;
+            document.getElementById('info-status').textContent = rest.status.toUpperCase();
+
+            // Configura botões de ação
+            const btnExcluir = document.getElementById('btn-excluir-restaurante');
+            if (btnExcluir) {
+                btnExcluir.onclick = async () => {
+                    if (confirm(`Tem certeza que deseja EXCLUIR o restaurante ${rest.nomeFantasia}?`)) {
+                        await deletarItem('restaurantes', rest.id);
+                        alert("Restaurante removido com sucesso.");
+                        window.location.href = 'programer.html';
+                    }
+                };
+            }
+
+            const btnSuspender = document.getElementById('btn-suspender');
+            if (btnSuspender) {
+                btnSuspender.onclick = async () => {
+                    rest.status = rest.status === 'suspenso' ? 'ativo' : 'suspenso';
+                    await atualizarItem('restaurantes', rest);
+                    alert(`Status alterado para: ${rest.status}`);
+                    location.reload();
+                };
+            }
+        }
+    }
+    carregarDetalhesRestaurante();
+
+    // --- Lógica de Redirecionamento Automático (Visitante -> Admin) ---
+    // Verifica se o restaurante que o usuário cadastrou foi aprovado
+    async function verificarStatusAprovacao() {
+        const msgAlerta = document.querySelector('.mensagem-alerta');
+        if (!msgAlerta) return; // Só executa se estiver na página de visitante/espera
+
+        const restaurantes = await buscarTodos('restaurantes');
+        
+        // Como não temos sistema de login real vinculado a ID, 
+        // pegamos o último restaurante pendente/ativo para simular o do usuário atual
+        if (restaurantes.length > 0) {
+            // Procura se existe algum restaurante que era pendente e agora está ativo
+            const meuRestauranteAtivo = restaurantes.find(r => r.status === 'ativo');
+            
+            if (meuRestauranteAtivo) {
+                // Se encontrar um ativo, redireciona para o painel administrativo
+                msgAlerta.innerHTML = `
+                    <p style="color: var(--secondary-color); font-weight: bold;">✅ Seu restaurante foi APROVADO!</p>
+                    <p>Redirecionando para o painel administrativo...</p>
+                `;
+                setTimeout(() => {
+                    window.location.href = '../administrativo/admin_painel.html';
+                }, 2000);
+            }
+        }
+    }
+
+    // Se estiver na tela de visitante, verifica a cada 3 segundos
+    if (window.location.href.includes('visitante.html')) {
+        setInterval(verificarStatusAprovacao, 3000);
+    }
 
     // --- Lógica de Visualização de Pedidos (Painel do Garçom) ---
     const listaPedidosGarcom = document.getElementById('lista-pedidos-garcom');
@@ -325,6 +481,90 @@ document.addEventListener('DOMContentLoaded', function() {
         return key;
     }
 
+    // --- Lógica de Solicitação de Cadastro de Restaurante (Onboarding) ---
+    // Esta função captura os dados do formulário de cadastro e os salva como 'pendente'
+    const formCadastroRestaurante = document.getElementById('form-cadastro-restaurante');
+    if (formCadastroRestaurante) {
+        formCadastroRestaurante.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const novoRestaurante = {
+                id: Date.now(), // Gera um ID único baseado no timestamp
+                nomeFantasia: document.getElementById('nome_restaurante').value,
+                responsavel: document.getElementById('nome_responsavel').value,
+                documento: document.getElementById('cnpj').value, // CNPJ ou CPF
+                telefone: document.getElementById('telefone').value,
+                endereco: document.getElementById('endereco').value,
+                status: 'pendente', // Status crucial para aparecer no Painel do Programador
+                dataSolicitacao: new Date().toISOString()
+            };
+
+            try {
+                if (typeof salvar === 'function') {
+                    await salvar('restaurantes', novoRestaurante);
+                    alert("✅ Solicitação enviada! Aguarde a moderação do programador.");
+                    // Redireciona para a tela de login ou uma página de aviso
+                    window.location.href = 'login_aba.html'; 
+                } else {
+                    alert("Erro técnico: Banco de dados não inicializado corretamente.");
+                }
+            } catch (err) {
+                console.error("Erro ao solicitar cadastro:", err);
+                alert("Houve um erro ao processar seu cadastro. Tente novamente.");
+            }
+        });
+    }
+
+    // --- Lógica Dinâmica do Painel do Programador ---
+    async function atualizarPainelProgramador() {
+        const solicitacoesContainer = document.getElementById('solicitacoes-cadastro-container');
+        const bodyAtivos = document.getElementById('restaurantes-ativos-body');
+
+        if (!solicitacoesContainer || !bodyAtivos) return;
+
+        const restaurantes = await buscarTodos('restaurantes');
+
+        // Renderizar Solicitações
+        solicitacoesContainer.innerHTML = '';
+        const pendentes = restaurantes.filter(r => r.status === 'pendente');
+        if (pendentes.length === 0) solicitacoesContainer.innerHTML = '<p>Nenhuma solicitação pendente.</p>';
+        
+        pendentes.forEach(rest => {
+            const card = document.createElement('article');
+            card.className = 'moderation-card';
+            card.innerHTML = `
+                <h3>Restaurante "${rest.nomeFantasia}"</h3>
+                <ul>
+                    <li><strong>Responsável:</strong> ${rest.responsavel}</li>
+                    <li><strong>Documento:</strong> ${rest.documento}</li>
+                    <li><strong>Telefone:</strong> ${rest.telefone}</li>
+                </ul>
+                <div class="action-buttons">
+                    <button type="button" class="btn-aprovar" data-id="${rest.id}" data-action="ativo">Aprovar Acesso</button>
+                    <button type="button" class="btn-cancelar" data-id="${rest.id}" data-action="rejeitado">Rejeitar</button>
+                </div>
+            `;
+            solicitacoesContainer.appendChild(card);
+        });
+
+        // Renderizar Ativos
+        bodyAtivos.innerHTML = '';
+        restaurantes.filter(r => r.status === 'ativo').forEach(rest => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>#${rest.id}</td>
+                <td>${rest.nomeFantasia}</td>
+                <td class="status-ativo">Ativo</td>
+                <td>
+                    <a href="programador_detalhes_restaurante.html?id=${rest.id}">
+                        <button type="button" class="btn-small">Ver Detalhes</button>
+                    </a>
+                </td>
+            `;
+            bodyAtivos.appendChild(tr);
+        });
+    }
+
     // --- Lógica de Autenticação e Visibilidade ---
     // Função para verificar o estado de autenticação do programador
     function checkProgrammerAuthentication() {
@@ -333,6 +573,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (programmerAuthSection) programmerAuthSection.classList.add('hidden'); // Esconde a seção de autenticação
             if (programmerSidebar) programmerSidebar.classList.remove('hidden'); // Mostra a sidebar
             if (programmerContent) programmerContent.classList.remove('hidden'); // Mostra o conteúdo do painel
+            atualizarPainelProgramador();
             return true;
         }
         // Se não autenticado, garante que o conteúdo está escondido e a seção de autenticação visível
@@ -344,6 +585,26 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Executa a verificação inicial ao carregar a página
     checkProgrammerAuthentication();
+
+    // Event Delegation para ações de moderação
+    const pContent = document.getElementById('programmer-content');
+    if (pContent) {
+        pContent.addEventListener('click', async (e) => {
+            if (e.target.dataset.id && e.target.dataset.action) {
+                const id = parseInt(e.target.dataset.id);
+                const acao = e.target.dataset.action;
+                
+                const restaurantes = await buscarTodos('restaurantes');
+                const rest = restaurantes.find(r => r.id === id);
+                if (rest) {
+                    rest.status = acao;
+                    await atualizarItem('restaurantes', rest);
+                    alert(`Restaurante ${acao === 'ativo' ? 'aprovado' : 'rejeitado'}!`);
+                    atualizarPainelProgramador();
+                }
+            }
+        });
+    }
 
     // Adiciona um ouvinte de evento para o botão de autenticação
     if (authenticateProgrammerBtn) {

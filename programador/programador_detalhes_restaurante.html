@@ -15,7 +15,7 @@
         </div>
         <div class="header-title-container">
             <h1>Administração de Parceiro</h1>
-            <p>Visão técnica e gerenciamento do cliente #001</p>
+            <p>Visão técnica e gerenciamento do cliente <span id="info-id-topo">#---</span></p>
         </div>
         <div class="header-actions">
             <a href="programer.html">
@@ -26,22 +26,22 @@
     <main>
         <!-- Dados Cadastrais -->
         <section>
-            <h2>🏢 Pizzaria Molho de Tomate (ID: #001)</h2>
+            <h2 id="info-titulo-nome">🏢 Carregando...</h2>
             <div class="two-column-layout">
                 <div>
                     <h3>Dados do Estabelecimento</h3>
                     <ul>
-                        <li><strong>CNPJ:</strong> 12.345.678/0001-99</li>
-                        <li><strong>Endereço:</strong> Rua das Azeitonas, 45, Bairro Jardim</li>
-                        <li><strong>Data de Cadastro:</strong> 10/02/2023</li>
+                        <li><strong>Documento:</strong> <span id="info-documento">---</span></li>
+                        <li><strong>Endereço:</strong> <span id="info-endereco">---</span></li>
+                        <li><strong>Data de Cadastro:</strong> <span id="info-data">---</span></li>
                     </ul>
                 </div>
                 <div>
                     <h3>Dados do Responsável (Admin)</h3>
                     <ul>
-                        <li><strong>Nome:</strong> João do Molho</li>
-                        <li><strong>Email:</strong> joao@molho.com.br</li>
-                        <li><strong>Telefone:</strong> (11) 98765-4321</li>
+                        <li><strong>Nome:</strong> <span id="info-responsavel">---</span></li>
+                        <li><strong>Telefone:</strong> <span id="info-telefone">---</span></li>
+                        <li><strong>Status Atual:</strong> <span id="info-status">---</span></li>
                     </ul>
                 </div>
             </div>
@@ -54,16 +54,14 @@
             <div class="two-column-layout">
                 <div>
                     <h3>📊 Métricas de Uso (Últimos 30 dias)</h3>
-                    <p><strong>Pedidos Processados:</strong> 1.240</p>
-                    <p><strong>Faturamento Estimado:</strong> R$ 45.000,00</p>
-                    <p><strong>Funcionários Ativos:</strong> 5</p>
+                    <p><strong>Pedidos Processados:</strong> 0</p>
+                    <p><strong>Faturamento Estimado:</strong> R$ 0,00</p>
                 </div>
                 <div>
                     <h3>🛠️ Ações Administrativas</h3>
                     <p>Ações rápidas que afetam diretamente o funcionamento do cliente.</p>
                     <div class="action-buttons">
-                        <button type="button">Resetar Senha do Admin</button>
-                        <button type="button" class="btn-esgotado">Suspender Temporariamente</button>
+                        <button type="button" id="btn-suspender" class="btn-esgotado">Suspender Acesso</button>
                     </div>
                 </div>
             </div>
@@ -71,8 +69,7 @@
                 <h4>Zona de Perigo</h4>
                 <p>Ações irreversíveis ou de punição grave.</p>
                 <div class="action-buttons">
-                    <button type="button" class="btn-cancelar">BANIR RESTAURANTE</button>
-                    <button type="button" class="btn-cancelar">Excluir Dados (GDPR)</button>
+                    <button type="button" id="btn-excluir-restaurante" class="btn-cancelar">EXCLUIR DEFINITIVAMENTE</button>
                 </div>
             </div>
         </section>
