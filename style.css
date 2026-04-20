@@ -20,6 +20,11 @@ body {
     line-height: 1.6; /* Melhora o espaçamento entre linhas para leitura */
 }
 
+/* Impede o scroll do fundo quando um modal está aberto */
+.no-scroll {
+    overflow: hidden !important;
+}
+
 /* Estrutura da página com sidebar fixa */
 .page-content {
     margin-left: 280px; /* Mesmo valor da largura da sidebar */
@@ -248,7 +253,46 @@ tbody tr:hover {
 
 /* Utilitário para esconder elementos */
 .hidden {
-    display: none;
+    display: none !important;
+}
+
+/* =========================================
+   Componente de Modal (Pop-up)
+   ========================================= */
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    backdrop-filter: blur(3px);
+}
+
+.modal-container {
+    background-color: #fff;
+    width: 90%;
+    max-width: 550px;
+    max-height: 85vh;
+    border-radius: 12px;
+    overflow-y: auto;
+    padding: 25px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    position: relative;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
 }
 /* =========================================
    Estilos do Controle de Estoque (Cozinha)
@@ -329,9 +373,11 @@ tbody tr:hover {
 .admin-nav ul {
     list-style: none;
     padding: 0;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
 }
 
 .admin-nav li a {
@@ -339,11 +385,24 @@ tbody tr:hover {
 }
 
 .admin-nav li button {
-    width: 100%;
-    padding: 25px;
-    font-size: 18px;
+    width: 200px;
+    padding: 15px;
+    font-size: 15px;
     text-align: center;
-    height: 100%;
+    background-color: #fff;
+    color: var(--dark-color);
+    border: 1px solid #e1e4e8;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.admin-nav li button:hover {
+    background-color: var(--light-bg);
+    color: var(--primary-color);
+    border-color: var(--primary-color);
 }
 
 /* Lista de Pedidos Prontos (Garçom) */
@@ -356,8 +415,7 @@ tbody tr:hover {
     margin-bottom: 15px;
 }
 
-.ready-orders-list li a {
-    display: block;
+.ready-orders-list li 
     padding: 20px;
     background-color: #f0fff0;
     border-left: 5px solid var(--secondary-color);
@@ -368,8 +426,7 @@ tbody tr:hover {
     transition: background-color 0.2s, transform 0.2s;
 }
 
-.ready-orders-list li a:hover {
-    background-color: #e0fbe0;
+
     transform: translateX(5px);
 }
 

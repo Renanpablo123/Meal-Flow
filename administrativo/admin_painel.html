@@ -21,24 +21,18 @@
     <main>
         <nav class="admin-nav">
             <ul>
-                <li>
-                    <a href="admin_equipe.html"><button>Gerenciar Funcionários</button></a>
-                </li>
-                <li>
-                    <a href="admin_editar_cardapio.html"><button>Editar Cardápio</button></a>
-                </li>
-                <li>
-                    <a href="admin_visualizar_cardapio.html"><button>Visualizar Cardápio</button></a>
-                </li>
+                <li><button onclick="abrirModalGerenciarEquipe()"><span>👥</span> Gerenciar Equipe</button></li>
+                <li><button onclick="abrirModalEditarCardapio()"><span>🍴</span> Editar Cardápio</button></li>
+                <li><button onclick="abrirModalVisualizarCardapio()"><span>📖</span> Visualizar Cardápio</button></li>
             </ul>
         </nav>
 
         <hr>
 
         <section>
-            <h2>Histórico de Pedidos (Fechamento)</h2>
+            <h2 style="margin-top: 0;">📊 Histórico de Pedidos (Fechamento)</h2>
             
-            <table border="1">
+            <table>
                 <thead>
                     <tr>
                         <th>ID do Pedido</th>
@@ -62,7 +56,7 @@
                         <td>Balcão / Maria</td>
                         <td>1x Hambúrguer, 1x Refrigerante</td>
                         <td>35,00</td>
-                        <td><strong>Não Pago (Pendente)</strong></td>
+                        <td><span style="color: #dc3545; font-weight: bold;">Pendente</span></td>
                     </tr>
 
                     <tr>
@@ -90,7 +84,7 @@
             </table>
 
             <br>
-            <button type="button">Exportar Histórico (CSV/PDF)</button>
+            <button type="button" class="btn-secondary">📥 Exportar Histórico (CSV)</button>
         </section>
 
     </main>

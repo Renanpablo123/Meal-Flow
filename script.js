@@ -107,69 +107,41 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // --- Lógica de Cardápio Dinâmico e Unificado ---
-    async function atualizarCardapioDinamico() {
-        const containerGarcom = document.getElementById('cardapio-garcom');
+    async function atualizarCardapioAdmin() {
         const containerAdmin = document.getElementById('cardapio-admin');
-        if (!containerGarcom && !containerAdmin) return;
+        if (!containerAdmin) return;
 
         const categorias = await buscarTodos('categorias');
         const produtos = await buscarTodos('produtos');
 
-        const renderizar = (container, perfil) => {
-            container.innerHTML = '';
-            if (categorias.length === 0) {
-                container.innerHTML = '<p>Nenhuma seção cadastrada no cardápio.</p>';
-                return;
-            }
+        containerAdmin.innerHTML = '';
+        if (categorias.length === 0) {
+            containerAdmin.innerHTML = '<p>Nenhuma seção cadastrada no cardápio.</p>';
+            return;
+        }
 
-            categorias.forEach(cat => {
-                const section = document.createElement('section');
-                section.innerHTML = `<h3>📂 ${cat.nome}</h3>`;
-                const itens = produtos.filter(p => p.categoriaId === cat.id);
+        categorias.forEach(cat => {
+            const section = document.createElement('section');
+            section.innerHTML = `<h3>📂 ${cat.nome}</h3>`;
+            const itens = produtos.filter(p => p.categoriaId === cat.id);
 
-                itens.forEach(prod => {
-                    const itemDiv = document.createElement('div');
-                    itemDiv.className = 'menu-item-row';
-                    itemDiv.style.borderBottom = "1px solid #eee";
-                    itemDiv.style.padding = "10px 0";
+            itens.forEach(prod => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'menu-item-row';
+                itemDiv.style.borderBottom = "1px solid #eee";
+                itemDiv.style.padding = "10px 0";
 
-                    if (perfil === 'garcom') {
-                        itemDiv.innerHTML = `
-                            <label>
-                                <input type="checkbox" class="checkbox-pedido" id="prod-${prod.id}" name="item${prod.id}" value="${prod.id}">
-                                <strong>${prod.nome}</strong> - R$ ${prod.preco.toFixed(2)}
-                            </label>
-                            <div id="detalhes-prod-${prod.id}" class="hidden" style="margin-top:5px; padding-left:25px;">
-                                <input type="number" name="qtd_item${prod.id}" value="1" min="1" style="width:60px">
-                                <input type="text" name="obs_item${prod.id}" placeholder="Observação...">
-                            </div>
-                        `;
-                    } else {
-                        itemDiv.innerHTML = `
-                            <span><strong>${prod.nome}</strong> - R$ ${prod.preco.toFixed(2)}</span>
-                            <div style="float:right">
-                                <button type="button" class="btn-small">Editar</button>
-                                <button type="button" class="btn-small btn-cancelar">Remover</button>
-                            </div>
-                        `;
-                    }
-                    section.appendChild(itemDiv);
-                });
-                container.appendChild(section);
+                itemDiv.innerHTML = `
+                    <span><strong>${prod.nome}</strong> - R$ ${prod.preco.toFixed(2)}</span>
+                    <div style="float:right">
+                        <button type="button" class="btn-small">Editar</button>
+                        <button type="button" class="btn-small btn-cancelar">Remover</button>
+                    </div>
+                `;
+                section.appendChild(itemDiv);
             });
-
-            if (perfil === 'garcom') {
-                container.querySelectorAll('.checkbox-pedido').forEach(cb => {
-                    cb.addEventListener('change', () => {
-                        const detalhes = document.getElementById('detalhes-' + cb.id);
-                        if (detalhes) detalhes.classList.toggle('hidden', !cb.checked);
-                    });
-                });
-            }
-        };
-
-        if (containerGarcom) renderizar(containerGarcom, 'garcom');
-        if (containerAdmin) renderizar(containerAdmin, 'admin');
+            containerAdmin.appendChild(section);
+        });
     }
 
     // --- Lógica de Histórico de Pedidos (Admin) ---
@@ -201,7 +173,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Chamadas Iniciais
-    atualizarCardapioDinamico();
+    atualizarCardapioAdmin();
     atualizarHistoricoAdmin();
 
     // --- Lógica de Detalhes do Restaurante (Página do Programador) ---
@@ -314,10 +286,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
             li.className = statusClass;
             li.innerHTML = `
-                <a href="garcom_detalhe_retirada.html?id=${pedido.id}">
-                    Pedido #${pedido.id} - Mesa ${pedido.mesa || 'N/A'} 
-                    <span class="status-tag">${statusTexto}</span>
-                </a>
+                <div onclick="abrirModalRetirada(${pedido.id})" style="cursor:pointer; padding: 20px; background: inherit; border-radius: 8px;">
+                    <strong>Pedido #${pedido.id}</strong> - Mesa ${pedido.mesa || 'N/A'} 
+                    <span class="status-tag" style="float:right">${statusTexto}</span>
+                </div>
             `;
             listaPedidosGarcom.appendChild(li);
         });
@@ -329,133 +301,478 @@ document.addEventListener('DOMContentLoaded', function() {
         setInterval(atualizarListaPedidosGarcom, 3000); // Atualiza a cada 3 segundos
     }
 
-    // --- Lógica da Tela de Revisão (Capturar dados do Cardápio e Salvar) ---
-    const listaResumo = document.getElementById('lista-resumo-itens');
-    const valorTotalResumo = document.getElementById('valor-total-resumo');
-    const formRevisao = document.getElementById('form-revisao-pedido');
+    // --- Sistema de Fluxo em Modal (SPA Garçom) ---
 
-    if (listaResumo && valorTotalResumo) {
-        const params = new URLSearchParams(window.location.search);
-        let itensParaSalvar = [];
-        let totalGeral = 0;
+    function getOrCreateModal() {
+        let modal = document.getElementById('modal-fluxo-garcom');
+        if (!modal) {
+            modal = document.createElement('div');
+            modal.id = 'modal-fluxo-garcom';
+            modal.className = 'modal-overlay hidden';
+            document.body.appendChild(modal);
+        }
+        return modal;
+    }
 
-        // Mapeamento simples de preços para demonstração (deve vir do cardápio no futuro)
-        const precos = { "item1": 10.00, "item2": 25.00 };
-        const nomes = { "item1": "Suco de Laranja", "item2": "Batata Frita" };
+    window.fecharModal = function() {
+        const modal = getOrCreateModal();
+        modal.classList.add('hidden');
+        modal.innerHTML = '';
+        document.body.classList.remove('no-scroll');
+    };
 
-        // Verifica quais itens vieram na URL
-        for (let i = 1; i <= 2; i++) {
-            if (params.get(`item${i}`)) {
-                const qtd = parseInt(params.get(`qtd_item${i}`)) || 1;
-                const obs = params.get(`obs_item${i}`) || "Nenhuma";
-                const subtotal = precos[`item${i}`] * qtd;
+    // PASSO 1: Seleção de Itens
+    window.abrirModalNovoPedido = async function() {
+        const modal = getOrCreateModal();
+        
+        // Busca categorias e produtos reais do banco de dados
+        const categoriasDb = await buscarTodos('categorias') || [];
+        const produtosDb = await buscarTodos('produtos') || [];
+
+        let conteudoCardapio = '';
+        
+        if (categoriasDb.length === 0) {
+            conteudoCardapio = '<p style="text-align:center; color:#666; margin: 20px 0;">O cardápio está vazio. Peça ao administrador para cadastrar produtos.</p>';
+        } else {
+            conteudoCardapio = categoriasDb.map(cat => {
+                const produtosDaCategoria = produtosDb.filter(p => p.categoriaId === cat.id);
                 
-                totalGeral += subtotal;
-                itensParaSalvar.push({ nome: nomes[`item${i}`], quantidade: qtd, observacao: obs });
+                if (produtosDaCategoria.length === 0) return ''; // Pula categorias vazias
 
-                const li = document.createElement('li');
-                li.textContent = `${qtd}x ${nomes[`item${i}`]} (Obs: ${obs}) - R$ ${subtotal.toFixed(2)}`;
-                listaResumo.appendChild(li);
+                return `
+                    <h4 style="border-bottom: 2px solid #000; margin-top:20px; color: #000; padding-bottom: 5px;">📂 ${cat.nome}</h4>
+                    ${produtosDaCategoria.map(prod => `
+                <div class="menu-item-row" style="display:flex; flex-direction: column; padding:12px 0; border-bottom: 1px solid #eee;">
+                    <label style="display: flex; align-items: center; gap: 12px; cursor: pointer; font-weight: 500;">
+                        <input type="checkbox" class="cb-item" 
+                            data-id="${prod.id}" 
+                            data-nome="${prod.nome}" 
+                            data-preco="${prod.preco}" style="transform: scale(1.3);">
+                        <span>${prod.nome} <span style="color: #666; font-weight: 400;">- R$ ${prod.preco.toFixed(2)}</span></span>
+                    </label>
+                    <div class="detalhes-item hidden" id="det-modal-${prod.id}" style="margin-top: 10px; background: #e9edef; padding: 12px; border-radius: 12px; position: relative;">
+                        <div style="margin-bottom: 8px; display: flex; align-items: center; gap: 10px;">
+                            <label style="font-size: 0.9rem;">Quantidade:</label>
+                            <input type="number" class="qtd-modal" value="1" min="1" style="width:60px; padding: 5px;">
+                        </div>
+                        <textarea class="obs-modal" placeholder="Escreva uma observação para este item..." style="width: 100%; height: 70px; border-radius: 8px; border: 1px solid #ccc; padding: 10px; box-sizing: border-box; resize: none; font-family: inherit;"></textarea>
+                    </div>
+                </div>
+            `).join('')}
+                `;
+            }).join('');
+        }
+
+        modal.innerHTML = `
+            <div class="modal-container">
+                <div class="modal-header">
+                    <h2>🛒 Novo Pedido: Itens</h2>
+                    <button onclick="fecharModal()">&times;</button>
+                </div>
+                <div id="modal-content-step1" style="max-height: 400px; overflow-y: auto; padding-right: 10px;">
+                    ${conteudoCardapio}
+                </div>
+                <div style="margin-top:20px; text-align:right;">
+                    <button class="btn-secondary" onclick="fecharModal()">Cancelar</button>
+                    <button onclick="irParaRevisao()">Revisar Pedido ➡</button>
+                </div>
+            </div>
+        `;
+        document.body.classList.add('no-scroll');
+        modal.classList.remove('hidden');
+
+        // Listener para exibir campos de QTD/OBS ao marcar checkbox
+        modal.querySelectorAll('.cb-item').forEach(cb => {
+            cb.onchange = () => {
+                document.getElementById(`det-modal-${cb.dataset.id}`).classList.toggle('hidden', !cb.checked);
+            };
+        });
+    };
+
+    // PASSO 2: Revisão e Identificação
+    window.irParaRevisao = function() {
+        const selecionados = [];
+        let total = 0;
+        document.querySelectorAll('.cb-item:checked').forEach(cb => {
+            const id = cb.dataset.id;
+            const qtd = parseInt(document.querySelector(`#det-modal-${id} .qtd-modal`).value);
+            const obs = document.querySelector(`#det-modal-${id} .obs-modal`).value;
+            const preco = parseFloat(cb.dataset.preco);
+            const subtotal = preco * qtd;
+            total += subtotal;
+            selecionados.push({ nome: cb.dataset.nome, quantidade: qtd, observacao: obs, subtotal });
+        });
+
+        if (selecionados.length === 0) return alert("Selecione pelo menos um item!");
+
+        const modal = getOrCreateModal();
+        modal.innerHTML = `
+            <div class="modal-container">
+                <div class="modal-header">
+                    <h2>📝 Revisão do Pedido</h2>
+                    <button onclick="fecharModal()">&times;</button>
+                </div>
+                <ul>${selecionados.map(i => `<li>${i.quantidade}x ${i.nome} (R$ ${i.subtotal.toFixed(2)})</li>`).join('')}</ul>
+                <p><strong>Total: R$ ${total.toFixed(2)}</strong></p>
+                <hr>
+                <div style="display:grid; gap:10px;">
+                    <input type="text" id="m-mesa" placeholder="Nº da Mesa">
+                    <input type="text" id="m-cliente" placeholder="Nome do Cliente">
+                    <input type="tel" id="m-telefone" placeholder="Telefone do Cliente (Opcional)">
+                </div>
+                <div style="margin-top:20px; text-align:right;">
+                    <button class="btn-secondary" onclick="abrirModalNovoPedido()">⬅ Voltar</button>
+                    <button onclick="confirmarPedidoFinal(${JSON.stringify(selecionados).replace(/"/g, '&quot;')}, ${total})">Confirmar e Enviar 🚀</button>
+                </div>
+            </div>
+        `;
+    };
+
+    // PASSO 3: Sucesso
+    window.confirmarPedidoFinal = async function(itens, total) {
+        const novoPedido = {
+            id: Math.floor(1000 + Math.random() * 9000),
+            mesa: document.getElementById('m-mesa').value || 'N/A',
+            cliente: document.getElementById('m-cliente').value || 'Anônimo',
+            telefone: document.getElementById('m-telefone').value || 'N/A',
+            itens: itens,
+            total: total,
+            status: 'aguardando',
+            dataCriacao: new Date().toISOString()
+        };
+
+        await salvar('pedidos', novoPedido);
+        
+        const modal = getOrCreateModal();
+        modal.innerHTML = `
+            <div class="modal-container" style="text-align:center;">
+                <h2 style="color:var(--secondary-color)">✅ Pedido Enviado!</h2>
+                <p>O ID do pedido é:</p>
+                <h1 style="font-size:3rem; margin:10px 0; color:var(--primary-color)">#${novoPedido.id}</h1>
+                <button onclick="fecharModal(); atualizarListaPedidosGarcom();" style="width:100%">Voltar ao Painel</button>
+            </div>
+        `;
+    };
+
+    // POP-UP DE DETALHES E RETIRADA
+    window.abrirModalRetirada = async function(id) {
+        const pedidos = await buscarTodos('pedidos');
+        const pedido = pedidos.find(p => p.id === id);
+        if (!pedido) return;
+
+        const modal = getOrCreateModal();
+        
+        let statusInfo = '';
+        if (pedido.status === 'aguardando' || !pedido.status) {
+            statusInfo = '<p style="color: #666; font-style: italic; text-align:center;">Aguardando preparo iniciar</p>';
+        } else if (pedido.status === 'preparando') {
+            statusInfo = '<p style="color: #666; font-style: italic; text-align:center;">Aguardando término do preparo</p>';
+        }
+
+        modal.innerHTML = `
+            <div class="modal-container">
+                <div class="modal-header">
+                    <h2>📦 Pedido #${pedido.id}</h2>
+                    <button onclick="fecharModal()">&times;</button>
+                </div>
+                <p><strong>Mesa:</strong> ${pedido.mesa} | <strong>Cliente:</strong> ${pedido.cliente}</p>
+                <p><strong>Telefone:</strong> ${pedido.telefone || 'N/A'} | <strong>Total:</strong> R$ ${pedido.total.toFixed(2)}</p>
+                <ul style="background:#f9f9f9; padding:15px; border-radius:8px; list-style:none;">
+                    ${pedido.itens.map(i => `<li>${i.quantidade}x ${i.nome}</li>`).join('')}
+                </ul>
+                <hr>
+                <div id="secao-status-entrega">
+                    ${statusInfo}
+                    ${pedido.status === 'pronto' ? '<button type="button" id="btn-pronto-entrega" style="width:100%;">Pedido pronto pra entrega</button>' : ''}
+                </div>
+
+                <form id="form-finalizar-modal" class="hidden">
+                    <label>Status do Pagamento:</label>
+                    <select id="sel-pagamento-modal" required>
+                        <option value="pago">Pago</option>
+                        <option value="nao_pago">Pendente</option>
+                    </select>
+                    <button type="submit" style="width:100%; margin-top:15px;">Finalizar e Entregar</button>
+                </form>
+            </div>
+        `;
+
+        document.body.classList.add('no-scroll');
+        modal.classList.remove('hidden');
+
+        const btnPronto = document.getElementById('btn-pronto-entrega');
+        if (btnPronto) {
+            btnPronto.onclick = () => {
+                document.getElementById('secao-status-entrega').classList.add('hidden');
+                document.getElementById('form-finalizar-modal').classList.remove('hidden');
+            };
+        }
+
+        const formModal = document.getElementById('form-finalizar-modal');
+        formModal.onsubmit = async (e) => {
+            e.preventDefault();
+            
+            if (pedido.status === 'pronto') {
+                pedido.status = 'entregue';
+                pedido.statusPagamento = document.getElementById('sel-pagamento-modal').value;
+                pedido.dataEntrega = new Date().toISOString();
+
+                await atualizarItem('pedidos', pedido);
+                alert("✅ Pedido finalizado com sucesso!");
+                fecharModal();
+                atualizarListaPedidosGarcom();
             }
-        }
-        valorTotalResumo.textContent = totalGeral.toFixed(2);
-
-        // Lógica de envio final
-        if (formRevisao) {
-            formRevisao.addEventListener('submit', async function(e) {
-                e.preventDefault();
-
-                const novoPedido = {
-                    id: Math.floor(1000 + Math.random() * 9000), // Gera um ID aleatório para teste
-                    mesa: document.getElementById('mesa').value || 'N/A',
-                    cliente: document.getElementById('nome_cliente').value || 'Anônimo',
-                    telefone: document.getElementById('telefone_cliente').value || '',
-                    itens: itensParaSalvar,
-                    total: totalGeral,
-                    status: 'aguardando',
-                    dataCriacao: new Date().toISOString()
-                };
-
-                try {
-                    // Função 'salvar' deve estar definida no seu db.js
-                    if (typeof salvar === 'function') {
-                        await salvar('pedidos', novoPedido);
-                        window.location.href = `garcom_sucesso.html?id=${novoPedido.id}`;
-                    } else {
-                        alert("Erro técnico: Função de salvamento não encontrada no db.js");
-                    }
-                } catch (err) {
-                    console.error("Erro ao salvar pedido:", err);
-                    alert("Não foi possível enviar o pedido para a cozinha.");
-                }
-            });
-        }
+        };
     }
 
-    // --- Lógica da Tela de Sucesso (Exibir o ID real do pedido) ---
-    const displayId = document.getElementById('display-pedido-id');
-    if (displayId) {
-        const params = new URLSearchParams(window.location.search);
-        displayId.textContent = params.get('id') || '---';
-    }
+    // --- Sistema de Gestão de Equipe em Modal (Admin) ---
+    window.abrirModalGerenciarEquipe = async function() {
+        const modal = getOrCreateModal();
+        
+        // Busca todos os usuários vinculados (ajuste o nome da store no IndexedDB se necessário)
+        const funcionarios = await buscarTodos('usuarios') || []; 
+        
+        const listaHtml = funcionarios.length > 0 ? `
+            <div style="max-height: 200px; overflow-y: auto; margin-top: 15px;">
+                <table style="width:100%; border-collapse: collapse; font-size: 0.9rem; text-align: left;">
+                    <thead style="background: #f4f4f4;">
+                        <tr>
+                            <th style="padding: 10px; border: 1px solid #ddd;">Nome</th>
+                            <th style="padding: 10px; border: 1px solid #ddd;">Função</th>
+                            <th style="padding: 10px; border: 1px solid #ddd;">Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${funcionarios.map(f => `
+                            <tr>
+                                <td style="padding: 10px; border: 1px solid #ddd;">${f.nome}</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">${f.funcao}</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">
+                                    <button class="btn-small btn-cancelar" onclick="removerFuncionario(${f.id})">Remover</button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </div>
+        ` : '<p style="text-align:center; color:#666; margin-top:15px;">Nenhum funcionário cadastrado.</p>';
 
-    // --- Lógica da Tela de Detalhes da Retirada (Finalização pelo Garçom) ---
-    const detalheId = document.getElementById('detalhe-id');
-    const formFinalizar = document.getElementById('form-finalizar-pedido');
-
-    if (detalheId) {
-        const params = new URLSearchParams(window.location.search);
-        const orderId = parseInt(params.get('id'));
-
-        async function carregarDetalhesPedido() {
-            const pedidos = await buscarTodos('pedidos');
-            const pedido = pedidos.find(p => p.id === orderId);
-
-            if (pedido) {
-                detalheId.textContent = `Pedido #${pedido.id}`;
-                document.getElementById('detalhe-mesa').textContent = pedido.mesa || 'N/A';
-                document.getElementById('detalhe-cliente').textContent = pedido.cliente || 'Anônimo';
-                document.getElementById('detalhe-telefone').textContent = pedido.telefone || 'N/A';
-                document.getElementById('detalhe-total').textContent = pedido.total.toFixed(2);
-
-                const listaItens = document.getElementById('detalhe-itens');
-                listaItens.innerHTML = pedido.itens.map(i => 
-                    `<li>${i.quantidade}x ${i.nome}</li>`
-                ).join('');
-            } else {
-                alert("Pedido não encontrado!");
-                window.location.href = 'garcom_painel.html';
-            }
-        }
-
-        carregarDetalhesPedido();
-
-        if (formFinalizar) {
-            formFinalizar.addEventListener('submit', async function(e) {
-                e.preventDefault();
+        modal.innerHTML = `
+            <div class="modal-container">
+                <div class="modal-header">
+                    <h2>👥 Gerenciar Equipe</h2>
+                    <button onclick="fecharModal()">&times;</button>
+                </div>
                 
-                try {
-                    const pedidos = await buscarTodos('pedidos');
-                    const pedido = pedidos.find(p => p.id === orderId);
+                <div style="display:grid; gap:10px; background: #f9f9f9; padding: 15px; border-radius: 8px; text-align: left;">
+                    <h4 style="margin:0 0 5px 0;">Cadastrar Novo Funcionário</h4>
+                    <input type="text" id="f-nome" placeholder="Nome Completo">
+                    <input type="email" id="f-email" placeholder="E-mail da Conta">
+                    <select id="f-funcao">
+                        <option value="" disabled selected>Escolha a função...</option>
+                        <option value="Garçom">Garçom</option>
+                        <option value="Cozinha">Cozinha</option>
+                        <option value="Administrador">Administrador</option>
+                    </select>
+                    <button onclick="salvarFuncionario()">Cadastrar Funcionário</button>
+                </div>
 
-                    if (pedido) {
-                        // Atualiza as informações finais
-                        pedido.status = 'entregue';
-                        pedido.statusPagamento = document.getElementById('status_pagamento').value;
-                        pedido.feedback = document.getElementById('reclamacoes').value;
-                        pedido.dataEntrega = new Date().toISOString();
+                <hr style="margin: 20px 0;">
+                
+                <h4 style="margin-bottom: 10px; text-align: left;">Funcionários Ativos</h4>
+                ${listaHtml}
+            </div>
+        `;
+        modal.classList.remove('hidden');
+    };
 
-                        await atualizarItem('pedidos', pedido);
-                        alert("✅ Pedido finalizado e entregue com sucesso!");
-                        window.location.href = 'garcom_painel.html';
-                    }
-                } catch (err) {
-                    console.error("Erro ao finalizar pedido:", err);
-                    alert("Erro ao salvar finalização do pedido.");
-                }
-            });
+    window.salvarFuncionario = async function() {
+        const nome = document.getElementById('f-nome').value;
+        const email = document.getElementById('f-email').value;
+        const funcao = document.getElementById('f-funcao').value;
+
+        if (!nome || !email || !funcao) return alert("Por favor, preencha todos os campos!");
+
+        const novoFunc = {
+            id: Date.now(),
+            nome,
+            email,
+            funcao,
+            dataCadastro: new Date().toISOString()
+        };
+
+        await salvar('usuarios', novoFunc);
+        alert("✅ Funcionário cadastrado com sucesso!");
+        abrirModalGerenciarEquipe(); // Recarrega o modal com a lista atualizada
+    };
+
+    window.removerFuncionario = async function(id) {
+        if (confirm("Tem certeza que deseja remover este funcionário?")) {
+            await deletarItem('usuarios', id);
+            abrirModalGerenciarEquipe();
         }
-    }
+    };
+
+    // --- Sistema de Gestão de Cardápio em Modal (Admin) ---
+    window.abrirModalEditarCardapio = async function() {
+        const modal = getOrCreateModal();
+        const categorias = await buscarTodos('categorias') || [];
+        const produtos = await buscarTodos('produtos') || [];
+
+        let cardapioHtml = '';
+        if (categorias.length === 0) {
+            cardapioHtml = '<p style="text-align:center; color:#666; margin-top:10px;">Crie sua primeira seção abaixo para começar.</p>';
+        } else {
+            cardapioHtml = categorias.map(cat => {
+                const itens = produtos.filter(p => p.categoriaId === cat.id);
+                return `
+                    <div style="margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px; text-align: left;">
+                        <div style="display:flex; justify-content: space-between; align-items: center; background: #f4f4f4; padding: 8px 12px; border-radius: 6px;">
+                            <h4 style="margin:0;">📂 ${cat.nome}</h4>
+                            <button class="btn-small btn-cancelar" onclick="removerSecao(${cat.id})">Apagar Seção</button>
+                        </div>
+                        <ul style="list-style:none; padding: 0; margin-top: 10px; font-size: 0.9rem;">
+                            ${itens.map(p => `
+                                <li style="display:flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f0f0f0;">
+                                    <span><strong>${p.nome}</strong> <br> <small style="color: #666;">R$ ${p.preco.toFixed(2)}</small></span>
+                                    <button class="btn-small btn-cancelar" style="padding: 2px 8px;" onclick="removerProduto(${p.id})">×</button>
+                                </li>
+                            `).join('')}
+                        </ul>
+                        ${itens.length === 0 ? '<p style="font-size: 0.8rem; color:#999; margin: 5px 0 0 10px;">Sem itens nesta seção.</p>' : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        modal.innerHTML = `
+            <div class="modal-container">
+                <div class="modal-header">
+                    <h2>🛠️ Gestão do Cardápio</h2>
+                    <button onclick="fecharModal()">&times;</button>
+                </div>
+                
+                <div style="max-height: 500px; overflow-y: auto; padding-right: 5px;">
+                    <!-- Bloco: Criar Categoria -->
+                    <div style="display:grid; gap:10px; background: #eef2f3; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: left;">
+                        <h4 style="margin:0;">1. Criar Nova Seção (ex: Bebidas)</h4>
+                        <div style="display:flex; gap:10px;">
+                            <input type="text" id="cat-nome" placeholder="Nome da Seção">
+                            <button onclick="salvarNovaSecao()">Criar</button>
+                        </div>
+                    </div>
+
+                    <!-- Bloco: Adicionar Item -->
+                    <div style="display:grid; gap:10px; background: #eef2f3; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: left;">
+                        <h4 style="margin:0;">2. Cadastrar Novo Item</h4>
+                        <select id="p-categoria">
+                            <option value="" disabled selected>Escolha a seção...</option>
+                            ${categorias.map(c => `<option value="${c.id}">${c.nome}</option>`).join('')}
+                        </select>
+                        <input type="text" id="p-nome" placeholder="Nome do prato ou bebida">
+                        <textarea id="p-desc" placeholder="Ingredientes (opcional)" style="height: 50px;"></textarea>
+                        <input type="number" id="p-preco" step="0.01" placeholder="Preço (R$)">
+                        <button onclick="salvarNovoItem()" style="width:100%;">Salvar Item no Cardápio</button>
+                    </div>
+
+                    <hr style="margin: 20px 0;">
+                    <h4 style="margin-bottom: 15px; text-align: left;">Visualização e Exclusão</h4>
+                    ${cardapioHtml}
+                </div>
+            </div>
+        `;
+        modal.classList.remove('hidden');
+    };
+
+    window.salvarNovaSecao = async function() {
+        const nome = document.getElementById('cat-nome').value;
+        if (!nome) return alert("Por favor, digite o nome da seção!");
+        await salvar('categorias', { id: Date.now(), nome });
+        abrirModalEditarCardapio();
+    };
+
+    window.salvarNovoItem = async function() {
+        const catId = parseInt(document.getElementById('p-categoria').value);
+        const nome = document.getElementById('p-nome').value;
+        const desc = document.getElementById('p-desc').value;
+        const preco = parseFloat(document.getElementById('p-preco').value);
+        if (!catId || !nome || isNaN(preco)) return alert("Preencha todos os campos obrigatórios!");
+        await salvar('produtos', { id: Date.now(), categoriaId: catId, nome, descricao: desc, preco });
+        abrirModalEditarCardapio();
+    };
+
+    window.removerSecao = async function(id) {
+        if (confirm("Atenção: Isso apagará a seção e todos os itens vinculados a ela. Continuar?")) {
+            await deletarItem('categorias', id);
+            abrirModalEditarCardapio();
+        }
+    };
+
+    window.removerProduto = async function(id) {
+        if (confirm("Deseja remover este item do cardápio?")) {
+            await deletarItem('produtos', id);
+            abrirModalEditarCardapio();
+        }
+    };
+
+    // --- Sistema de Visualização de Cardápio em Modal (Admin) ---
+    window.abrirModalVisualizarCardapio = async function() {
+        const modal = getOrCreateModal();
+        const categorias = await buscarTodos('categorias') || [];
+        const produtos = await buscarTodos('produtos') || [];
+
+        let cardapioHtml = '';
+        if (categorias.length === 0) {
+            cardapioHtml = '<p style="text-align:center; color:#666; margin-top:20px;">O cardápio ainda está vazio.</p>';
+        } else {
+            cardapioHtml = categorias.map(cat => {
+                const itens = produtos.filter(p => p.categoriaId === cat.id);
+                return `
+                    <div style="margin-top: 20px; text-align: left;">
+                        <h3 style="background: #f4f4f4; padding: 10px; border-radius: 5px; margin-bottom: 10px; border-left: 5px solid var(--primary-color);">📂 ${cat.nome}</h3>
+                        <table style="width:100%; border-collapse: collapse; margin-bottom: 20px; font-size: 0.9rem;">
+                            <thead>
+                                <tr style="background: #fdfdfd;">
+                                    <th style="padding: 10px; border-bottom: 2px solid #eee; text-align: left;">Item</th>
+                                    <th style="padding: 10px; border-bottom: 2px solid #eee; text-align: right;">Preço</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${itens.length > 0 ? itens.map(p => `
+                                    <tr>
+                                        <td style="padding: 10px; border-bottom: 1px solid #eee;">
+                                            <strong>${p.nome}</strong><br>
+                                            <small style="color: #777;">${p.descricao || ''}</small>
+                                        </td>
+                                        <td style="padding: 10px; border-bottom: 1px solid #eee; text-align: right; vertical-align: top;">
+                                            R$ ${p.preco.toFixed(2)}
+                                        </td>
+                                    </tr>
+                                `).join('') : '<tr><td colspan="2" style="padding: 10px; text-align:center; color: #999;">Nenhum item cadastrado nesta seção.</td></tr>'}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        modal.innerHTML = `
+            <div class="modal-container">
+                <div class="modal-header">
+                    <h2>📖 Cardápio Digital</h2>
+                    <button onclick="fecharModal()">&times;</button>
+                </div>
+                <div style="max-height: 550px; overflow-y: auto; padding-right: 10px;">
+                    ${cardapioHtml}
+                </div>
+                <div style="margin-top:20px; display: flex; gap: 10px;">
+                    <button class="btn-secondary" style="flex:1" onclick="fecharModal()">Fechar</button>
+                    <button style="flex:1" onclick="abrirModalEditarCardapio()">Editar Cardápio</button>
+                </div>
+            </div>
+        `;
+        modal.classList.remove('hidden');
+    };
 
     // --- Programmer Panel Authentication --- (Código existente abaixo...)
     // Seleciona os elementos relevantes para a autenticação do programador
