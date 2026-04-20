@@ -9,7 +9,6 @@
 <body>
     <header class="main-header">
         <div class="logo-container">
-            <img src="../assets/logo Meal-Flow.png" alt="Meal-Flow Logo" class="logo">
             <span class="brand-name">
                 <span class="meal">Meal</span><span class="flow">Flow</span>
             </span>
@@ -22,15 +21,20 @@
     <main>
         <h2>Olá, Visitante!</h2>
         
-        <div class="mensagem-alerta">
-            <p><strong>Aviso:</strong> Você ainda não está vinculado a nenhum restaurante.</p>
-            <p>Por favor, aguarde ser adicionado por um Administrador ou cadastre o seu próprio estabelecimento abaixo.</p>
-        </div>
+        <div class="two-column-layout" style="max-width: 1000px; margin: 0 auto; padding: 0 20px;">
+            <article class="mensagem-alerta" style="margin: 0; max-width: none;">
+                <h3>⏳ Aguardando Vínculo</h3>
+                <p>Você ainda não está vinculado a nenhum restaurante cadastrado no sistema.</p>
+                <p>Aguarde ser adicionado por um <strong>Administrador</strong> para começar a usar seu painel.</p>
+            </article>
 
-        <br>
-        <a href="cadastro_restaurante.html">
-            <button type="button">Cadastrar meu próprio restaurante</button>
-        </a>
+            <article style="margin: 0; max-width: none;">
+                <h3>🏢 Novo Estabelecimento</h3>
+                <p>É proprietário de um negócio e deseja digitalizar o seu fluxo de pedidos com o MealFlow?</p>
+                <p>Cadastre sua unidade.</p>
+                <button type="button" onclick="abrirModalCadastroRestaurante()" style="width: 100%;">Cadastrar meu Restaurante</button>
+            </article>
+        </div>
     </main>
     <script src="../db.js"></script>
     <script src="../script.js"></script>

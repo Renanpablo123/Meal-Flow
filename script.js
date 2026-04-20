@@ -4,21 +4,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Seleciona a seção que contém todos os cards de pedido
     const filaPedidos = document.getElementById('fila-pedidos');
 
-    // --- Validação de Senhas (Página de Cadastro de Usuário) ---
-    // Verifica se estamos na página que tem o campo de repetir senha
-    const senhaInput = document.getElementById('senha');
-    const repetirSenhaInput = document.getElementById('repetir_senha');
-    
-    if (senhaInput && repetirSenhaInput) {
-        const formCadastro = senhaInput.closest('form');
-        formCadastro.addEventListener('submit', function(event) {
-            if (senhaInput.value !== repetirSenhaInput.value) {
-                event.preventDefault(); // Impede o envio do formulário
-                alert("❌ Erro: As senhas não coincidem. Por favor, verifique.");
-            }
-        });
-    }
-
     // --- Lógica de Visualização e Controle da Cozinha ---
     async function atualizarFilaCozinha() {
         if (!filaPedidos) return;
@@ -335,7 +320,8 @@ document.addEventListener('DOMContentLoaded', function() {
             conteudoCardapio = '<p style="text-align:center; color:#666; margin: 20px 0;">O cardápio está vazio. Peça ao administrador para cadastrar produtos.</p>';
         } else {
             conteudoCardapio = categoriasDb.map(cat => {
-                const produtosDaCategoria = produtosDb.filter(p => p.categoriaId === cat.id);
+                // Filtra para não mostrar itens esgotados no cardápio do garçom
+                const produtosDaCategoria = produtosDb.filter(p => p.categoriaId === cat.id && !p.esgotado);
                 
                 if (produtosDaCategoria.length === 0) return ''; // Pula categorias vazias
 
@@ -774,6 +760,186 @@ document.addEventListener('DOMContentLoaded', function() {
         modal.classList.remove('hidden');
     };
 
+    // --- Sistema de Cadastro de Usuário em Modal ---
+    window.abrirModalCadastro = function() {
+        const modal = getOrCreateModal();
+        
+        modal.innerHTML = `
+            <div class="modal-container">
+                <div class="modal-header">
+                    <h2>📝 Crie sua Conta</h2>
+                    <button onclick="fecharModal()">&times;</button>
+                </div>
+                <form id="form-cadastro-modal" style="text-align: left;">
+                    <div>
+                        <label for="m-nome">Nome Completo:</label>
+                        <input type="text" id="m-nome" placeholder="Seu nome" required>
+                    </div>
+                    <br>
+                    <div>
+                        <label for="m-email">E-mail:</label>
+                        <input type="email" id="m-email" placeholder="seu@email.com" required>
+                    </div>
+                    <br>
+                    <div>
+                        <label for="m-senha">Senha:</label>
+                        <input type="password" id="m-senha" placeholder="Mínimo 6 caracteres" required minlength="6">
+                    </div>
+                    <br>
+                    <div>
+                        <label for="m-repetir-senha">Repetir Senha:</label>
+                        <input type="password" id="m-repetir-senha" placeholder="Confirme sua senha" required>
+                    </div>
+                    <br>
+                    <button type="submit" style="background-color: #28a745; width: 100%;">Finalizar Cadastro</button>
+                    <button type="button" class="btn-secondary" onclick="fecharModal()" style="width: 100%; margin-top: 10px;">Voltar</button>
+                </form>
+            </div>
+        `;
+
+        document.body.classList.add('no-scroll');
+        modal.classList.remove('hidden');
+
+        const form = document.getElementById('form-cadastro-modal');
+        form.onsubmit = async (e) => {
+            e.preventDefault();
+            const nome = document.getElementById('m-nome').value;
+            const email = document.getElementById('m-email').value;
+            const senha = document.getElementById('m-senha').value;
+            const repetir = document.getElementById('m-repetir-senha').value;
+
+            if (senha !== repetir) {
+                alert("❌ Erro: As senhas não coincidem.");
+                return;
+            }
+
+            await salvar('usuarios', { id: Date.now(), nome, email, senha, funcao: 'Visitante', dataCadastro: new Date().toISOString() });
+            alert("✅ Conta criada com sucesso! Use seu e-mail e senha para logar.");
+            fecharModal();
+        };
+    };
+
+    // --- Sistema de Cadastro de Restaurante em Modal ---
+    window.abrirModalCadastroRestaurante = function() {
+        const modal = getOrCreateModal();
+        
+        modal.innerHTML = `
+            <div class="modal-container">
+                <div class="modal-header">
+                    <h2>🏢 Cadastre seu Restaurante</h2>
+                    <button onclick="fecharModal()">&times;</button>
+                </div>
+                <form id="form-cadastro-restaurante-modal" style="text-align: left;">
+                    <div>
+                        <label for="m-rest-nome">Nome do Restaurante (obrigatório):</label>
+                        <input type="text" id="m-rest-nome" placeholder="Ex: Sabor & Cia" required>
+                    </div>
+                    <br>
+                    <div>
+                        <label for="m-rest-resp">Nome do Responsável (obrigatório):</label>
+                        <input type="text" id="m-rest-resp" placeholder="Seu nome completo" required>
+                    </div>
+                    <br>
+                    <div>
+                        <label for="m-rest-cnpj">CNPJ / MEI (opcional):</label>
+                        <input type="text" id="m-rest-cnpj" placeholder="00.000.000/0000-00">
+                    </div>
+                    <br>
+                    <div>
+                        <label for="m-rest-end">Endereço Completo (obrigatório):</label>
+                        <input type="text" id="m-rest-end" placeholder="Rua, Número, Bairro, Cidade" required>
+                    </div>
+                    <br>
+                    <div>
+                        <p style="margin-bottom: 5px; font-weight: bold;">Tipo de Cozinha (obrigatório):</p>
+                        <label><input type="radio" name="m-tipo-cozinha" value="brasileira" required> Brasileira</label><br>
+                        <label><input type="radio" name="m-tipo-cozinha" value="italiana"> Italiana</label><br>
+                        <label><input type="radio" name="m-tipo-cozinha" value="japonesa"> Japonesa</label><br>
+                        <label><input type="radio" name="m-tipo-cozinha" value="lanchonete"> Lanchonete/Fast Food</label><br>
+                        <label><input type="radio" name="m-tipo-cozinha" value="outros"> Outros</label>
+                    </div>
+                    <br>
+                    <div>
+                        <label for="m-rest-tel">Telefone de Contato (obrigatório):</label>
+                        <input type="tel" id="m-rest-tel" placeholder="(00) 00000-0000" required>
+                    </div>
+                    <br>
+                    <button type="submit" style="width: 100%;">Finalizar Cadastro</button>
+                    <button type="button" class="btn-secondary" onclick="fecharModal()" style="width: 100%; margin-top: 10px;">Voltar</button>
+                </form>
+            </div>
+        `;
+
+        document.body.classList.add('no-scroll');
+        modal.classList.remove('hidden');
+
+        const form = document.getElementById('form-cadastro-restaurante-modal');
+        form.onsubmit = async (e) => {
+            e.preventDefault();
+            const novoRestaurante = {
+                id: Date.now(),
+                nomeFantasia: document.getElementById('m-rest-nome').value,
+                responsavel: document.getElementById('m-rest-resp').value,
+                documento: document.getElementById('m-rest-cnpj').value,
+                endereco: document.getElementById('m-rest-end').value,
+                tipoCozinha: document.querySelector('input[name="m-tipo-cozinha"]:checked').value,
+                telefone: document.getElementById('m-rest-tel').value,
+                status: 'pendente',
+                dataSolicitacao: new Date().toISOString()
+            };
+
+            await salvar('restaurantes', novoRestaurante);
+            alert("✅ Solicitação enviada! Aguarde a moderação do programador.");
+            fecharModal();
+        };
+    };
+
+    // --- Sistema de Gestão de Estoque em Modal (Cozinha) ---
+    window.abrirModalEstoque = async function() {
+        const modal = getOrCreateModal();
+        const produtos = await buscarTodos('produtos') || [];
+
+        const listaHtml = produtos.length > 0 ? `
+            <ul class="lista-controle" style="text-align: left; margin-top: 15px;">
+                ${produtos.map(p => `
+                    <li class="${p.esgotado ? 'item-esgotado' : ''}">
+                        <span>${p.nome}</span>
+                        <button type="button" class="btn-small ${p.esgotado ? 'btn-reativar' : 'btn-esgotado'}" 
+                            onclick="toggleStatusProduto(${p.id})">
+                            ${p.esgotado ? 'Reativar' : 'Marcar Esgotado'}
+                        </button>
+                    </li>
+                `).join('')}
+            </ul>
+        ` : '<p style="text-align:center; color:#666; margin-top:20px;">Nenhum produto cadastrado no cardápio.</p>';
+
+        modal.innerHTML = `
+            <div class="modal-container">
+                <div class="modal-header">
+                    <h2>📦 Controle de Estoque</h2>
+                    <button onclick="fecharModal()">&times;</button>
+                </div>
+                <p style="font-size: 0.9rem; color: #666; margin-bottom: 10px;">Marque os itens indisponíveis. Eles serão ocultados automaticamente para os garçons.</p>
+                <div style="max-height: 400px; overflow-y: auto; padding-right: 5px;">
+                    ${listaHtml}
+                </div>
+                <button type="button" class="btn-secondary" style="width:100%; margin-top:20px;" onclick="fecharModal()">Voltar ao Painel</button>
+            </div>
+        `;
+        modal.classList.remove('hidden');
+        document.body.classList.add('no-scroll');
+    };
+
+    window.toggleStatusProduto = async function(id) {
+        const produtos = await buscarTodos('produtos');
+        const produto = produtos.find(p => p.id === id);
+        if (produto) {
+            produto.esgotado = !produto.esgotado;
+            await atualizarItem('produtos', produto);
+            abrirModalEstoque(); // Atualiza a lista dentro do modal
+        }
+    };
+
     // --- Programmer Panel Authentication --- (Código existente abaixo...)
     // Seleciona os elementos relevantes para a autenticação do programador
     const programmerAuthSection = document.getElementById('programmer-auth-section');
@@ -796,40 +962,6 @@ document.addEventListener('DOMContentLoaded', function() {
             return DEFAULT_PROGRAMMER_KEY;
         }
         return key;
-    }
-
-    // --- Lógica de Solicitação de Cadastro de Restaurante (Onboarding) ---
-    // Esta função captura os dados do formulário de cadastro e os salva como 'pendente'
-    const formCadastroRestaurante = document.getElementById('form-cadastro-restaurante');
-    if (formCadastroRestaurante) {
-        formCadastroRestaurante.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const novoRestaurante = {
-                id: Date.now(), // Gera um ID único baseado no timestamp
-                nomeFantasia: document.getElementById('nome_restaurante').value,
-                responsavel: document.getElementById('nome_responsavel').value,
-                documento: document.getElementById('cnpj').value, // CNPJ ou CPF
-                telefone: document.getElementById('telefone').value,
-                endereco: document.getElementById('endereco').value,
-                status: 'pendente', // Status crucial para aparecer no Painel do Programador
-                dataSolicitacao: new Date().toISOString()
-            };
-
-            try {
-                if (typeof salvar === 'function') {
-                    await salvar('restaurantes', novoRestaurante);
-                    alert("✅ Solicitação enviada! Aguarde a moderação do programador.");
-                    // Redireciona para a tela de login ou uma página de aviso
-                    window.location.href = 'login_aba.html'; 
-                } else {
-                    alert("Erro técnico: Banco de dados não inicializado corretamente.");
-                }
-            } catch (err) {
-                console.error("Erro ao solicitar cadastro:", err);
-                alert("Houve um erro ao processar seu cadastro. Tente novamente.");
-            }
-        });
     }
 
     // --- Lógica Dinâmica do Painel do Programador ---
