@@ -1,8 +1,8 @@
 <?php
 
 require_once 'model.php';
-require_once 'IPedidoRepository.php';
-require_once 'PedidoRepository.php';
+require_once 'database/IPedidoRepository.php';
+require_once 'database/PedidoRepository.php';
 require_once 'service.php';
 require_once 'controller.php';
 require_once 'middleware.php';
