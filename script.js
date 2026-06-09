@@ -940,6 +940,32 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
 
+    // --- Sistema de Testes de Visualização em Modal (Programador) ---
+    window.abrirModalTestesVisualizacao = function() {
+        const modal = getOrCreateModal();
+        
+        modal.innerHTML = `
+            <div class="modal-container">
+                <div class="modal-header">
+                    <h2>🧪 Atalhos de Teste (Navegação)</h2>
+                    <button onclick="fecharModal()">&times;</button>
+                </div>
+                <p style="margin-bottom: 20px; color: #666;">Selecione uma interface para testar o fluxo do sistema:</p>
+                
+                <div class="admin-nav" style="display: flex; flex-direction: column; gap: 10px;">
+                    <a href="../login e visitante/login_aba.html" style="text-decoration:none;"><button type="button" style="width:100%">🏠 Home / Login</button></a>
+                    <a href="../administrativo/admin_painel.html" style="text-decoration:none;"><button type="button" style="width:100%">💼 Painel Admin (Dono)</button></a>
+                    <a href="../garçom/garcom_painel.html" style="text-decoration:none;"><button type="button" style="width:100%">📝 Painel Garçom</button></a>
+                    <a href="../cozinha/cozinha_painel.html" style="text-decoration:none;"><button type="button" style="width:100%">🍳 Painel Cozinha</button></a>
+                </div>
+
+                <button type="button" class="btn-secondary" style="width:100%; margin-top:20px;" onclick="fecharModal()">Fechar</button>
+            </div>
+        `;
+        modal.classList.remove('hidden');
+        document.body.classList.add('no-scroll');
+    };
+
     // --- Programmer Panel Authentication --- (Código existente abaixo...)
     // Seleciona os elementos relevantes para a autenticação do programador
     const programmerAuthSection = document.getElementById('programmer-auth-section');

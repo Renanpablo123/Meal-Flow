@@ -1,22 +1,15 @@
 <?php
 
-require_once 'model.php';
-require_once 'IPedidoRepository.php';
-require_once 'PedidoRepository.php';
-require_once 'service.php';
-require_once 'controller.php';
-require_once 'middleware.php';
+// public/index.php
 
-// Simulação de Container de Injeção de Dependência
-$repository = new PedidoRepository();
-$service = new PedidoService($repository);
-$controller = new PedidoController($service);
+/**
+ * Este é o ponto de entrada único (Front Controller) da aplicação.
+ * Todas as requisições são direcionadas para este arquivo via .htaccess.
+ */
 
-// Roteamento simples
-$action = $_GET['action'] ?? 'index';
+// Se o index.php estiver na RAIZ junto com o router.php, use:
+require_once __DIR__ . '/router.php';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'store') {
-    $controller->store($_POST);
-} else {
-    $controller->index();
-}
+// Se você mover o index.php para uma pasta chamada 'public', use:
+// require_once __DIR__ . '/../router.php';
+?>

@@ -1,0 +1,8 @@
+# .htaccess
+# Este arquivo deve estar na raiz do seu projeto (ou no diretório 'public' se você o mover para lá)
+# Ele reescreve todas as requisições para index.php, permitindo URLs amigáveis.
+
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php/$1 [L]

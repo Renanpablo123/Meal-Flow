@@ -1,33 +1,33 @@
 <?php
 
+// app/config/database.php
+
+/**
+ * Configuração e conexão com o banco de dados.
+ * Utiliza PDO para uma conexão segura e flexível.
+ */
 class Database {
-    private static $instance = null;
-    private $pdo;
+    private static $host = 'localhost';
+    private static $db_name = 'mealflow_db'; // Nome do seu banco de dados
+    private static $username = 'root';       // Seu usuário do banco de dados
+    private static $password = '';           // Sua senha do banco de dados
+    private static $conn;
 
-    private function __construct() {
-        $config = parse_ini_file(__DIR__ . '/config.ini');
-        
-        $dsn = "{$config['driver']}:host={$config['host']};dbname={$config['dbname']};charset=utf8mb4";
-        
-        try {
-            $this->pdo = new PDO($dsn, $config['user'], $config['password'], [
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-                PDO::ATTR_EMULATE_PREPARES => false,
-            ]);
-        } catch (PDOException $e) {
-            die("Erro na conexão com o banco de dados: " . $e->getMessage());
+    /**
+     * Obtém a instância da conexão PDO.
+     * @return PDO A conexão PDO.
+     */
+    public static function getConnection() {
+        if (self::$conn === null) {
+            try {
+                self::$conn = new PDO("mysql:host=" . self::$host . ";dbname=" . self::$db_name, self::$username, self::$password);
+                self::$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                self::$conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC); // Retorna arrays associativos por padrão
+            } catch (PDOException $exception) {
+                error_log("Erro de conexão com o banco de dados: " . $exception->getMessage());
+                die("Erro de conexão com o banco de dados. Por favor, tente novamente mais tarde.");
+            }
         }
-    }
-
-    public static function getInstance() {
-        if (self::$instance === null) {
-            self::$instance = new self();
-        }
-        return self::$instance->getConnection();
-    }
-
-    public function getConnection() {
-        return $this->pdo;
+        return self::$conn;
     }
 }
