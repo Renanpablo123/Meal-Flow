@@ -88,6 +88,16 @@ section, form, article {
     box-shadow: 0 2px 8px rgba(0,0,0,0.05); /* Sombra suave para dar profundidade */
 }
 
+/* Estilo da página de login */
+.login-container {
+    margin: 100px auto;
+    padding: 40px;
+    max-width: 400px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
 /* Estilo dos inputs e textareas para consistência */
 input[type="text"],
 input[type="email"],
@@ -415,7 +425,8 @@ tbody tr:hover {
     margin-bottom: 15px;
 }
 
-.ready-orders-list li 
+.ready-orders-list li a {
+    display: block;
     padding: 20px;
     background-color: #f0fff0;
     border-left: 5px solid var(--secondary-color);
@@ -426,11 +437,9 @@ tbody tr:hover {
     transition: background-color 0.2s, transform 0.2s;
 }
 
-
+.ready-orders-list li a:hover {
     transform: translateX(5px);
 }
-
-/* Cores de Status para a Lista do Garçom */
 .order-item-aguardando a {
     background-color: #fff9c4 !important; /* Amarelo claro */
     border-left-color: #fbc02d !important;
@@ -476,8 +485,6 @@ tbody tr:hover {
     box-shadow: 4px 0px 15px rgba(0,0,0,0.08);
     padding: 25px;
     animation: slideInFromLeft 0.5s ease-out forwards;
-}
-.sidebar-nav {
     display: flex; /* Ativa o Flexbox */
     flex-direction: column; /* Organiza os itens em coluna */
 }
@@ -487,8 +494,6 @@ tbody tr:hover {
     margin-top: 0;
     border-bottom: 1px solid #eee;
     padding-bottom: 15px;
-}
-.sidebar-nav h2 {
     margin-bottom: 15px; /* Espaçamento abaixo do título */
 }
 

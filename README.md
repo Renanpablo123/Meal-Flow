@@ -108,3 +108,32 @@ Status do Projeto
 -Documento de referência: DRF-2026-001
 -Versão: 1.3 – Detalhamento Técnico Consolidado
 -Status: Especificação Final
+
+## Alterações para Linux
+
+Para que o projeto funcione corretamente em ambientes Linux (como Ubuntu ou Debian), siga estas etapas:
+
+## Checklist de Preparação para Linux (Apresentação)
+
+Siga estes passos antes de rodar o comando do servidor no Linux:
+
+1. **Instalar dependências do PHP**:
+   ```bash
+   sudo apt update
+   sudo apt install php-common php-sqlite3 php-pdo-sqlite
+   ```
+2. **Corrigir permissões de escrita (Crucial para SQLite)**:
+   Dentro da pasta `Meal-Flow`, execute:
+   ```bash
+   chmod -R 777 .
+   ```
+3. **Subir o servidor**:
+   ```bash
+   php -S localhost:8000
+   ```
+4. **Atenção ao Case-Sensitivity**: O Linux diferencia `AuthController.php` de `authcontroller.php`. Todos os arquivos na pasta `app/controllers/` devem começar com letra maiúscula.
+2. **Permissões de Escrita**: Garanta que o arquivo `database.sqlite` e a pasta raiz tenham permissão de escrita:
+   ```bash
+   chmod 777 database.sqlite
+   ```
+3. **Case Sensitivity**: O Linux diferencia `Arquivo.php` de `arquivo.php`. Mantenha sempre o padrão definido nos arquivos.

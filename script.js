@@ -953,10 +953,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 <p style="margin-bottom: 20px; color: #666;">Selecione uma interface para testar o fluxo do sistema:</p>
                 
                 <div class="admin-nav" style="display: flex; flex-direction: column; gap: 10px;">
-                    <a href="../login e visitante/login_aba.html" style="text-decoration:none;"><button type="button" style="width:100%">🏠 Home / Login</button></a>
-                    <a href="../administrativo/admin_painel.html" style="text-decoration:none;"><button type="button" style="width:100%">💼 Painel Admin (Dono)</button></a>
-                    <a href="../garçom/garcom_painel.html" style="text-decoration:none;"><button type="button" style="width:100%">📝 Painel Garçom</button></a>
-                    <a href="../cozinha/cozinha_painel.html" style="text-decoration:none;"><button type="button" style="width:100%">🍳 Painel Cozinha</button></a>
+                    <a href="/login" style="text-decoration:none;"><button type="button" style="width:100%">🏠 Home / Login</button></a>
+                    <a href="/admin/painel" style="text-decoration:none;"><button type="button" style="width:100%">💼 Painel Admin (Dono)</button></a>
+                    <a href="/garcom/painel" style="text-decoration:none;"><button type="button" style="width:100%">📝 Painel Garçom</button></a>
+                    <a href="/cozinha/painel" style="text-decoration:none;"><button type="button" style="width:100%">🍳 Painel Cozinha</button></a>
                 </div>
 
                 <button type="button" class="btn-secondary" style="width:100%; margin-top:20px;" onclick="fecharModal()">Fechar</button>
